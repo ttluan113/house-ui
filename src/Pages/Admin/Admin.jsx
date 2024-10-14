@@ -1,0 +1,78 @@
+import className from 'classnames/bind';
+import styles from './Admin.module.scss';
+import Header from '../../Components/Header/Header';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faHouse, faPlus, faRightFromBracket, faShield, faSignal } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
+import ManagerUser from './Components/ManagerUser/ManagerUser';
+import ManagerBlog from './Components/ManagerBlog/ManagerBlog';
+import ManagerBDS from './Components/ManagerBDS/ManagerBDS';
+import ManagerStatusBDS from './Components/ManagerStatusBDS/ManagerStatusBDS';
+import CreateBDS from './Components/CreateBDS/CreateBDS';
+
+const cx = className.bind(styles);
+
+function Admin() {
+    const [checkType, setCheckType] = useState(1);
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        Cookies.remove('Token');
+        navigate('/');
+    };
+
+    return (
+        <div className={cx('wrapper')}>
+            <header>
+                <Header />
+            </header>
+
+            <main className={cx('main')}>
+                <div className={cx('column-left')}>
+                    <ul>
+                        <li onClick={() => setCheckType(1)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faUser} />
+                            Quản Lý Người Dùng
+                        </li>
+                        <li onClick={() => setCheckType(2)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faShield} />
+                            Duyệt Và Kiểm Duyệt Tin Đăng
+                        </li>
+                        <li onClick={() => setCheckType(3)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faHouse} />
+                            Quản Lý Bất Động Sản
+                            <FontAwesomeIcon id={cx('icon')} />
+                        </li>
+                        <li onClick={() => setCheckType(4)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faSignal} />
+                            Theo Dõi Và Quản Lý Trạng Thái Bất Động Sản
+                        </li>
+                        <li onClick={() => setCheckType(5)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
+                            Tạo Bất Động Sản
+                        </li>
+                        <li onClick={handleLogout}>
+                            <FontAwesomeIcon style={{ color: 'red' }} icon={faRightFromBracket} />
+                            Đăng Xuất
+                        </li>
+                    </ul>
+                </div>
+                <div className={cx('column-right')}>
+                    {checkType === 1 && <ManagerUser />}
+                    {checkType === 2 && <ManagerBlog />}
+                    {checkType === 3 && <ManagerBDS />}
+                    {checkType === 4 && <ManagerStatusBDS />}
+                    {checkType === 5 && <CreateBDS />}
+                </div>
+            </main>
+        </div>
+    );
+}
+
+export default Admin;

@@ -1,0 +1,48 @@
+.main {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 20% 75%;
+    gap: 50px;
+    margin: 30px auto;
+}
+
+.column-left {
+    width: 100%;
+    box-shadow: rgba(51, 78, 169, 0.1) 0px 8px 32px -4px;
+    ul {
+        padding-left: 0px;
+        margin-bottom: 0px;
+    }
+    li {
+        position: relative;
+        list-style: none;
+        border-bottom: 0.5px solid rgba(229, 229, 234);
+        padding: 15px;
+        color: #000;
+        font-size: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        transition: 0.3s;
+        font-weight: 400;
+    }
+    li:hover {
+        background-color: rgba(229, 229, 234);
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    #icon {
+        position: absolute;
+        right: 20px;
+    }
+
+    .sub-menu {
+        li {
+            padding-left: 40px;
+        }
+    }
+}
+
+.column-right {
+    width: 100%;
+}

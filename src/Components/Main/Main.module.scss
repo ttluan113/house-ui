@@ -1,0 +1,68 @@
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.inner {
+    width: 90%;
+    height: 100%;
+    margin: 0px auto;
+}
+
+.btn {
+    width: 100px;
+    height: 40px;
+    background-color: #eff3ff;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 20px;
+    margin-top: 20px;
+    button {
+        width: 100%;
+        border: none;
+        background: none;
+        border-radius: 20px;
+    }
+    .active {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+}
+
+.main {
+    width: 90%;
+    margin: 50px auto;
+    h3 {
+        border-bottom: 1px solid #ccc;
+        text-align: left;
+    }
+}
+
+.form-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.btn-watch-all {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    button {
+        width: 120px;
+        height: 50px;
+        border: none;
+        background: var(--primary-color);
+        color: #fff;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+    button:hover {
+        background: #fff;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        transition: 0.3s;
+    }
+}

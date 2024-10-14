@@ -1,0 +1,210 @@
+.header-main {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 49% 49%;
+    height: 500px;
+    gap: 50px;
+    .column-left {
+        h2 {
+            font-size: 45px;
+        }
+    }
+    .column-right {
+        img {
+            border-radius: 5px;
+            width: 100%;
+            height: 500px;
+        }
+    }
+}
+
+.search-house {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    .btn-select {
+        button {
+            border: none;
+            background: none;
+            padding: 0px 20px;
+        }
+        .active-button {
+            color: var(--primary-color);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-color);
+        }
+    }
+}
+
+.search-input {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    input {
+        width: 80%;
+        height: 100%;
+        border: 1px solid #ccc;
+        outline: none;
+        padding-left: 10px;
+        border-radius: 5px;
+    }
+    button {
+        width: 19%;
+        height: 100%;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: 700;
+    }
+}
+
+.select-option {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.div-range {
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .label-range {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .modal-range {
+        max-height: 400px;
+        background-color: #fff;
+        position: absolute;
+        top: 110%;
+        box-shadow: 0px 8px 32px -4px rgba(51, 78, 169, 0.1);
+        z-index: 999;
+        padding: 10px;
+    }
+    span {
+        font-size: 15px;
+        padding-left: 4px;
+    }
+}
+
+.input-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+    border-bottom: 2px solid blue;
+}
+
+.range-slider {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.slider-container {
+    position: relative;
+    height: 6px;
+    margin-bottom: 20px;
+}
+
+.slider-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ddd;
+    border-radius: 3px;
+}
+
+.slider-range {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: #007bff;
+    border-radius: 3px;
+}
+
+input[type='range'] {
+    position: absolute;
+    width: 95%;
+    height: 0;
+    -webkit-appearance: none;
+    z-index: 2;
+    pointer-events: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+input[type='range'].thumb-left {
+    z-index: 3;
+}
+
+input[type='range'].thumb-right {
+    z-index: 2;
+}
+
+.list-range {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding-top: 15px;
+    overflow-y: scroll;
+    height: 200px;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding-left: 0px;
+        li {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            list-style: none;
+            padding-left: 10px;
+        }
+        li:hover {
+            cursor: pointer;
+            background-color: #ccc;
+            transition: 0.3s;
+        }
+    }
+}
+
+.btn-apply-price {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    button {
+        width: 100%;
+        height: 40px;
+        border: none;
+        background: none;
+    }
+    #succes {
+        background-color: var(--primary-color);
+        border-radius: 10px;
+        color: #fff;
+    }
+}

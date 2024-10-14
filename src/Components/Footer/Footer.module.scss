@@ -1,0 +1,27 @@
+.wrapper {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.04);
+    display: grid;
+    grid-template-columns: 25% 10% 15% 20% 15% 15%;
+    padding-top: 30px;
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    li {
+        list-style: none;
+        display: flex;
+        gap: 10px;
+        color: #888;
+    }
+    #logo {
+        font-size: 35px;
+        font-weight: 600;
+    }
+    #item-1 {
+        font-size: 17px;
+        font-weight: 700;
+        padding-bottom: 15px;
+    }
+}
