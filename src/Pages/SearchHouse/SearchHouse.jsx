@@ -21,7 +21,7 @@ function SearchHouse() {
     const [maxValue, setMaxValue] = useState(500);
 
     const [minPrice, setMinPrice] = useState(1);
-    const [maxPrice, setMaxPrice] = useState(100000000);
+    const [maxPrice, setMaxPrice] = useState(100000000000);
 
     const [province, setProvince] = useState('');
     const [checkPostType, setCheckPostType] = useState('');
@@ -35,7 +35,7 @@ function SearchHouse() {
     const max = 500;
 
     const minPriceSearch = 0;
-    const maxPriceSearch = 100000000;
+    const maxPriceSearch = 100000000000;
 
     const handleMinChange = (e) => {
         const value = Math.min(Number(e.target.value), maxValue - 1);
@@ -64,15 +64,14 @@ function SearchHouse() {
 
     const handleSearchHouse = async () => {
         const data = {
-            ...(province && { province: province }),
-            ...(propertyType && { propertyType: propertyType }),
+            province: province,
+            propertyType: propertyType,
             minPrice: minPrice,
             maxPrice: 10000000,
             minArea: minValue,
             maxArea: maxValue,
-            ...(maxValue && { maxArea: maxValue }),
-            ...(checkPostType && { postType: checkPostType }),
-            ...(district && { district: district }),
+            postType: checkPostType,
+            district: district,
         };
 
         localStorage.setItem('data', JSON.stringify(data));

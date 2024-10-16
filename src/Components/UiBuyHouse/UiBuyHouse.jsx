@@ -80,10 +80,9 @@ function UiBuyHouse() {
             maxPrice: 10000000,
             minArea: minValue,
             maxArea: maxValue,
-            ...(maxValue && { maxArea: maxValue }),
-            ...(checkPostType && { postType: checkPostType }),
-            ...(district && { district: district }),
-            ...(propertyType && { propertyType: propertyType }),
+            postType: checkPostType,
+            district: district,
+            propertyType: propertyType,
         };
         localStorage.setItem('data', JSON.stringify(data));
         navigate('/search');

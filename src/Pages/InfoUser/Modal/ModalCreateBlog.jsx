@@ -56,12 +56,6 @@ function CreateBDS({ show, setShow, data }) {
                     <Modal.Title>Tạo Bài Đăng</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <select className="form-select mb-3" aria-label="Default select example" value={data.categoryId}>
-                        <option selected>Loại Bất Động Sản</option>
-                        <option value="4">Nhà Đất</option>
-                        <option value="5">Chung Cư</option>
-                    </select>
-
                     <div className="form-floating mb-3">
                         <input
                             type="text"

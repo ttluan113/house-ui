@@ -34,9 +34,11 @@ function Main() {
             <div className={cx('main')}>
                 <h3>Gợi ý cho bạn</h3>
                 <div className={cx('form-card')}>
-                    {dataHouseAll.slice(0, 8).map((house) => (
-                        <CardBody key={house?.postId} house={house} />
-                    ))}
+                    {dataHouseAll?.length > 0 ? (
+                        dataHouseAll.slice(0, 8).map((house) => <CardBody key={house?.postId} house={house} />)
+                    ) : (
+                        <p>No houses available</p> // Hoặc hiển thị gì đó khi không có dữ liệu
+                    )}
                 </div>
 
                 {/* <div className={cx('btn-watch-all')}>
