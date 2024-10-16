@@ -27,6 +27,7 @@ function SearchHouse() {
     const [checkPostType, setCheckPostType] = useState('');
 
     const [propertyType, setPropertyType] = useState('');
+    const [district, setDistrict] = useState('');
 
     const [dataSearch, setDataSearch] = useState([]);
 
@@ -63,14 +64,15 @@ function SearchHouse() {
 
     const handleSearchHouse = async () => {
         const data = {
-            province: province,
+            ...(province && { province: province }),
+            ...(propertyType && { propertyType: propertyType }),
             minPrice: minPrice,
             maxPrice: 10000000,
             minArea: minValue,
             maxArea: maxValue,
-            postType: checkPostType,
-            propertyType,
-            // district: '458 Minh Khai',
+            ...(maxValue && { maxArea: maxValue }),
+            ...(checkPostType && { postType: checkPostType }),
+            ...(district && { district: district }),
         };
 
         localStorage.setItem('data', JSON.stringify(data));
@@ -85,14 +87,12 @@ function SearchHouse() {
     const newData = localStorage.getItem('data');
 
     useEffect(() => {
-        if (newData) {
-            const fetchData = async () => {
-                const res = await requestSearchHouse(JSON.parse(newData));
-                setDataSearch(res.content);
-            };
-            fetchData();
-        }
-    }, [newData]);
+        const fetchData = async () => {
+            const res = await requestSearchHouse(JSON.parse(newData));
+            setDataSearch(res.content);
+        };
+        fetchData();
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -103,22 +103,13 @@ function SearchHouse() {
             <main className={cx('main')}>
                 <div className={cx('inner')}>
                     <div className={cx('header-search')}>
-                        <div className={cx('search-input')}>
-                            <input placeholder="Nhập từ khóa" onChange={(e) => setProvince(e.target.value)} />
-                            <button onClick={handleSearchHouse}>Tìm kiếm</button>
-                        </div>
                         <div className={cx('select-option')}>
-                            {/* <select className="form-select" aria-label="Chọn khu vực">
-                            <option selected>Khu vực</option>
-                            <option value="1">Hà Nội</option>
-                        </select> */}
-
                             <select
                                 className="form-select"
                                 aria-label="Chọn loại BĐS"
                                 onChange={(e) => setPropertyType(e.target.value)}
                             >
-                                <option selected>Loại BĐS</option>
+                                <option value={null}>Loại BĐS</option>
                                 <option value="chung cư">Chung Cư</option>
                                 <option value="Nhà Đất">Nhà Đất</option>
                             </select>
@@ -387,6 +378,15 @@ function SearchHouse() {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                        <div className={cx('search-input')}>
+                            <input
+                                type="text"
+                                placeholder="Nhập phường"
+                                onChange={(e) => setDistrict(e.target.value)}
+                            />
+                            <input placeholder="Nhập thành phố" onChange={(e) => setProvince(e.target.value)} />
+                            <button onClick={handleSearchHouse}>Tìm kiếm</button>
                         </div>
                     </div>
                     {dataSearch.length > 0 ? (

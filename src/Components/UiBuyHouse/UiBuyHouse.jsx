@@ -38,6 +38,8 @@ function UiBuyHouse() {
     const [province, setProvince] = useState('');
     const [checkPostType, setCheckPostType] = useState('');
 
+    const [district, setDistrict] = useState('');
+
     const [propertyType, setPropertyType] = useState('');
 
     const min = 0;
@@ -73,13 +75,15 @@ function UiBuyHouse() {
 
     const handleSearchHouse = async () => {
         const data = {
-            province: province,
+            ...(province && { province: province }),
             minPrice: minPrice,
-            maxPrice: maxPrice,
+            maxPrice: 10000000,
             minArea: minValue,
             maxArea: maxValue,
-            postType: checkPostType,
-            propertyType,
+            ...(maxValue && { maxArea: maxValue }),
+            ...(checkPostType && { postType: checkPostType }),
+            ...(district && { district: district }),
+            ...(propertyType && { propertyType: propertyType }),
         };
         localStorage.setItem('data', JSON.stringify(data));
         navigate('/search');
@@ -98,6 +102,7 @@ function UiBuyHouse() {
                     </div>
                     <div className={cx('search-input')}>
                         <input placeholder="Nhập từ khóa" onChange={(e) => setProvince(e.target.value)} />
+                        <input type="text" placeholder="Nhập phường" onChange={(e) => setDistrict(e.target.value)} />
                         <button onClick={handleSearchHouse}>Tìm kiếm</button>
                     </div>
 

@@ -72,7 +72,9 @@ export const requestGetOneHouse = async (id) => {
 };
 
 export const requestSearchHouse = async (data) => {
-    const res = await request.post('/posts/search', data, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await request.post('/posts/search', data, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
 };
 
