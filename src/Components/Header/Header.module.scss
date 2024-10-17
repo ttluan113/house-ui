@@ -36,8 +36,9 @@
 
 .user {
     button {
+        --tw-bg-opacity: 1;
         border: 1px solid var(--primary-color);
-        background: none;
+        background: rgba(215, 226, 255, var(--tw-bg-opacity));
         padding: 5px;
         border-radius: 5px;
         color: var(--primary-color);

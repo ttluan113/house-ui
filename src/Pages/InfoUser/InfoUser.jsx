@@ -18,7 +18,7 @@ function InfoUser() {
     const [checkSubMenu, setChecSubMenu] = useState(false);
     const [checkSubMenu2, setChecSubMenu2] = useState(false);
 
-    const [typeMenu, setTypeMenu] = useState(1);
+    const [typeMenu, setTypeMenu] = useState(7);
 
     const navigate = useNavigate();
 

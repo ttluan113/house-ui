@@ -8,7 +8,9 @@ import banner2 from '../../assets/img/banner2.jpg';
 import banner3 from '../../assets/img/banner3.jpg';
 import banner4 from '../../assets/img/banner4.jpg';
 
-import { useState } from 'react';
+import axios from 'axios';
+
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -17,11 +19,13 @@ const cx = classNames.bind(styles);
 
 function UiBuyHouse() {
     const settings = {
-        dots: true,
+        dots: false,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
     };
 
     const navigate = useNavigate();
@@ -33,7 +37,7 @@ function UiBuyHouse() {
     const [maxValue, setMaxValue] = useState(500);
 
     const [minPrice, setMinPrice] = useState(1);
-    const [maxPrice, setMaxPrice] = useState(100000000);
+    const [maxPrice, setMaxPrice] = useState(100000000000);
 
     const [province, setProvince] = useState('');
     const [checkPostType, setCheckPostType] = useState('');
@@ -46,7 +50,7 @@ function UiBuyHouse() {
     const max = 500;
 
     const minPriceSearch = 0;
-    const maxPriceSearch = 100000000;
+    const maxPriceSearch = 100000000000;
 
     const handleMinChange = (e) => {
         const value = Math.min(Number(e.target.value), maxValue - 1);
@@ -73,11 +77,25 @@ function UiBuyHouse() {
         setIsOpen2(false);
     };
 
+    const [tinhthanh, setTinhThanh] = useState([]);
+    const [idTinhThanh, setIdTinhThanh] = useState(1);
+    const [huyen, setHuyen] = useState([]);
+    const [idHuyen, setIdHuyen] = useState(0);
+    const [xa, setXa] = useState([]);
+
+    useEffect(() => {
+        axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
+    }, []);
+
+    useEffect(() => {
+        axios.get(`https://esgoo.net/api-tinhthanh/2/0${1}.htm`).then((res) => setHuyen(res.data.data));
+    }, [idTinhThanh]);
+
     const handleSearchHouse = async () => {
         const data = {
             ...(province && { province: province }),
             minPrice: minPrice,
-            maxPrice: 10000000,
+            maxPrice: maxPrice,
             minArea: minValue,
             maxArea: maxValue,
             postType: checkPostType,
@@ -100,8 +118,29 @@ function UiBuyHouse() {
                         <button className={cx('active-button')}>Dự án</button>
                     </div>
                     <div className={cx('search-input')}>
-                        <input placeholder="Nhập từ khóa" onChange={(e) => setProvince(e.target.value)} />
-                        <input type="text" placeholder="Nhập phường" onChange={(e) => setDistrict(e.target.value)} />
+                        <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onChange={(e) => setProvince(e.target.value)}
+                        >
+                            <option selected>Chọn Thành Phố</option>
+                            <option value="Hà Nội">Hà Nội</option>
+                        </select>
+
+                        <select
+                            style={{ width: '200px' }}
+                            class="form-select"
+                            aria-label="Default select example"
+                            onChange={(e) => setDistrict(e.target.value)}
+                        >
+                            <option selected>Chọn quận</option>
+                            {huyen.map((item) => (
+                                <option key={item.id} value={item.name}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </select>
+
                         <button onClick={handleSearchHouse}>Tìm kiếm</button>
                     </div>
 

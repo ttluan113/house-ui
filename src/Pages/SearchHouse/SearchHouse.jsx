@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
+import axios from 'axios';
+
 import { requestSearchHouse } from '../../Config';
 
 const cx = classNames.bind(styles);
@@ -21,7 +23,7 @@ function SearchHouse() {
     const [maxValue, setMaxValue] = useState(500);
 
     const [minPrice, setMinPrice] = useState(1);
-    const [maxPrice, setMaxPrice] = useState(100000000000);
+    const [maxPrice, setMaxPrice] = useState(10000000000);
 
     const [province, setProvince] = useState('');
     const [checkPostType, setCheckPostType] = useState('');
@@ -35,7 +37,7 @@ function SearchHouse() {
     const max = 500;
 
     const minPriceSearch = 0;
-    const maxPriceSearch = 100000000000;
+    const maxPriceSearch = 10000000000;
 
     const handleMinChange = (e) => {
         const value = Math.min(Number(e.target.value), maxValue - 1);
@@ -62,12 +64,26 @@ function SearchHouse() {
         setIsOpen2(false);
     };
 
+    const [tinhthanh, setTinhThanh] = useState([]);
+    const [idTinhThanh, setIdTinhThanh] = useState(1);
+    const [huyen, setHuyen] = useState([]);
+    const [idHuyen, setIdHuyen] = useState(0);
+    const [xa, setXa] = useState([]);
+
+    useEffect(() => {
+        axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
+    }, []);
+
+    useEffect(() => {
+        axios.get(`https://esgoo.net/api-tinhthanh/2/0${1}.htm`).then((res) => setHuyen(res.data.data));
+    }, [idTinhThanh]);
+
     const handleSearchHouse = async () => {
         const data = {
             province: province,
             propertyType: propertyType,
             minPrice: minPrice,
-            maxPrice: 10000000,
+            maxPrice: maxPrice,
             minArea: minValue,
             maxArea: maxValue,
             postType: checkPostType,
@@ -379,12 +395,27 @@ function SearchHouse() {
                             </div>
                         </div>
                         <div className={cx('search-input')}>
-                            <input
-                                type="text"
-                                placeholder="Nhập phường"
+                            <select
+                                class="form-select"
+                                aria-label="Default select example"
                                 onChange={(e) => setDistrict(e.target.value)}
-                            />
-                            <input placeholder="Nhập thành phố" onChange={(e) => setProvince(e.target.value)} />
+                            >
+                                <option selected>Chọn quận</option>
+                                {huyen.map((item) => (
+                                    <option key={item.id} value={item.name}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <select
+                                class="form-select"
+                                aria-label="Default select example"
+                                onChange={(e) => setProvince(e.target.value)}
+                            >
+                                <option selected>Chọn Thành Phố</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                            </select>
                             <button onClick={handleSearchHouse}>Tìm kiếm</button>
                         </div>
                     </div>
@@ -396,7 +427,6 @@ function SearchHouse() {
                         </div>
                     ) : (
                         <div className={cx('loading')}>
-                            <div className={cx('loader')}></div>
                             <p>Chúng tôi chưa có dữ liệu của bạn tìm kiếm </p>
                         </div>
                     )}

@@ -43,13 +43,19 @@ function CardBody({ house }) {
             <ToastContainer />
             <Link to={`/bds/${house?.postId}`}>
                 <div className={cx('slide')}>
-                    <Slider {...settings}>
-                        {house?.property?.images.map((img) => (
-                            <div className={cx('img')}>
-                                <img src={img} alt="" />
-                            </div>
-                        ))}
-                    </Slider>
+                    {/* <Slider {...settings}>
+                        <div className={cx('slider-container')}>
+                            {house?.property?.images.map((img) => (
+                                <div className={cx('img')}>
+                                    <img src={img} alt="" />
+                                </div>
+                            ))}
+                        </div>
+                    </Slider> */}
+
+                    <div className={cx('img')}>
+                        <img src={house?.property?.images[0]} alt="" />
+                    </div>
                 </div>
             </Link>
 

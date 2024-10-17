@@ -1,0 +1,20 @@
+.btn-payment {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    background-color: #af1a71;
+    border-radius: 10px;
+    padding: 7px;
+    img {
+        width: 50px;
+    }
+    button {
+        border: none;
+        background: none;
+        color: #fff;
+    }
+}
+
+.btn-payment:hover {
+    cursor: pointer;
+}

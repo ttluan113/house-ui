@@ -5,8 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-import ModalAddImages from './Modal/ModalAddImages';
-
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 import { Editor } from '@tinymce/tinymce-react';
 
 const cx = classNames.bind(styles);
@@ -25,6 +26,8 @@ function CreateBDS() {
     const [phuong, setPhuong] = useState('');
     const [province, setProvince] = useState('');
 
+    const [dataImg, setDataImg] = useState([]);
+
     const [tinhthanh, setTinhThanh] = useState([]);
     const [idTinhThanh, setIdTinhThanh] = useState(0);
     const [huyen, setHuyen] = useState([]);
@@ -32,43 +35,17 @@ function CreateBDS() {
     const [xa, setXa] = useState([]);
     const [setIdXa] = useState(0);
 
-    const [checkLengthImg, setCheckLengthImg] = useState(false);
-
-    const [dataBlogNoImage, setDataBlogNoImage] = useState([]);
-
-    const handleUploadImg = useCallback(async (data) => {
-        const imageNames = Array.from(data.img);
-
-        const newData = {
-            img: imageNames,
-            postId: data.postId,
-        };
-
-        const res = await requestUploadImg(newData);
-
-        const res1 = await requestGetAllBlog();
-        const img = res1.filter((item) => item?.images?.length <= 0);
-        setDataBlogNoImage(img);
-        if (img.length > 0) {
-            setCheckLengthImg(true);
-        } else {
-            setCheckLengthImg(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await requestGetAllBlog();
-            const img = res.filter((item) => item?.images?.length <= 0);
-            setDataBlogNoImage(img);
-            if (img.length > 0) {
-                setCheckLengthImg(true);
-            } else {
-                setCheckLengthImg(false);
-            }
-        };
-        fetchData();
-    }, [checkLengthImg]);
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
 
     useEffect(() => {
         axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
@@ -95,7 +72,6 @@ function CreateBDS() {
             sophong,
             soToilet,
             userId,
-            propertyId: 101,
             statusId: 1,
             ownerId: 1,
             categoryId: 4,
@@ -109,6 +85,8 @@ function CreateBDS() {
             age: 5,
         };
 
+        console.log(dataImg);
+
         try {
             const res = await requestCreateBDS(data);
             if (res.status === 200) {
@@ -117,6 +95,22 @@ function CreateBDS() {
         } catch (error) {
             toast.error('Đã có lỗi xảy ra vui lòng thử lại !!!');
         }
+    };
+    const [imagePreviews, setImagePreviews] = useState([]);
+    const handleImageChange = (files) => {
+        const previews = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previews.push(e.target.result);
+                if (previews.length === files.length) {
+                    setImagePreviews(previews);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        setDataImg(files);
     };
 
     return (
@@ -155,6 +149,7 @@ function CreateBDS() {
                     />
                     <label htmlFor="floatingInput">Giá Bất Động Sản</label>
                 </div>
+
                 <select className="form-select mb-3" aria-label="Default select example">
                     <option defaultValue>Loại Bất Động Sản</option>
                     <option value="4">Nhà Đất</option>
@@ -182,7 +177,7 @@ function CreateBDS() {
                     />
                     <label htmlFor="floatingInput">Diện Tích</label>
                 </div>
-                {/* thành phố */}
+
                 <select
                     className="form-select mb-3"
                     aria-label="Default select example"
@@ -253,7 +248,7 @@ function CreateBDS() {
                         placeholder="name@example.com/"
                         onChange={(e) => setSoTang(e.target.value)}
                     />
-                    <label htmlFor="floatingInput">Số Tầng</label>
+                    <label htmlFor="floatingInput">Số tầng</label>
                 </div>
 
                 <div className="form-floating mb-3">
@@ -267,22 +262,26 @@ function CreateBDS() {
                     <label htmlFor="floatingInput">Số Toilet</label>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="name@example.com/"
-                        onChange={(e) => setUserId(e.target.value)}
-                    />
-                    <label htmlFor="floatingInput">Tạo Bất Động Sản cho User ID</label>
+                <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+                    Upload Ảnh
+                    <VisuallyHiddenInput type="file" multiple onChange={(e) => handleImageChange(e.target.files)} />
+                </Button>
+
+                <div className={cx('image-preview')}>
+                    {imagePreviews.map((image, index) => (
+                        <img
+                            key={index}
+                            src={image}
+                            alt={`Preview ${index}`}
+                            style={{ width: '100px', height: '100px', margin: '5px' }}
+                        />
+                    ))}
                 </div>
 
-                <button onClick={handlePostBDS} type="button" className="btn btn-primary">
+                <Button variant="contained" onClick={handlePostBDS}>
                     Tạo Bất Động Sản
-                </button>
+                </Button>
             </div>
-            <ModalAddImages show={checkLengthImg} dataBlogNoImage={dataBlogNoImage} handleUploadImg={handleUploadImg} />
         </div>
     );
 }

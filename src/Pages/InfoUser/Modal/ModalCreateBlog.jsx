@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { requestPostBlog } from '../../../Config';
+import styles from './ModalCreateBlog.module.scss';
+import classNames from 'classnames/bind';
 
 import decodedJWT from '../../../utils/decodeJWT';
+
+const cx = classNames.bind(styles);
 
 function CreateBDS({ show, setShow, data }) {
     const handleClose = () => setShow(false);
@@ -16,7 +20,17 @@ function CreateBDS({ show, setShow, data }) {
     const [postType, setPostType] = useState('');
     const [newPrice, setNewPrice] = useState(data?.price);
 
+    const [checkTypeCharged, setCheckTypeCharged] = useState(false);
+
     const [checkPostType, setCheckPostType] = useState(false);
+
+    useEffect(() => {
+        if (charged === '1') {
+            setCheckTypeCharged(true);
+        } else {
+            setCheckTypeCharged(false);
+        }
+    }, [charged]);
 
     useEffect(() => {
         if (postType === 'for_sale') {
@@ -120,6 +134,14 @@ function CreateBDS({ show, setShow, data }) {
                                 onChange={(e) => setNewPrice(e.target.value)}
                             />
                             <label htmlFor="floatingInput">Giá Bất Động Sản</label>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {checkTypeCharged ? (
+                        <div className={cx('btn-payment')}>
+                            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="" />
+                            <button>Thanh Toán Qua Momo</button>
                         </div>
                     ) : (
                         <></>

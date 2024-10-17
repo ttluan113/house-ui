@@ -6,6 +6,8 @@ import { requestGetOneHouse } from '../../Config';
 
 import { useParams } from 'react-router-dom';
 
+import { Loader } from 'google-maps';
+
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
@@ -23,7 +25,16 @@ function DetailHouse() {
         fetchData();
     }, []);
 
-    console.log(dataHouse);
+    const loader = new Loader('AIzaSyATaCUgFVhSI-CG33VK0H0opx7BHkhVmrg');
+    useEffect(() => {
+        loader.load().then(function (google) {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 21.004751, lng: 105.863135 },
+                zoom: 8,
+            });
+            console.log(map);
+        });
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -36,11 +47,15 @@ function DetailHouse() {
                     <div className={cx('img-big')}>
                         {dataHouse.property?.images[0] && <img src={dataHouse.property.images[0]} alt="big-img" />}
                     </div>
-                    <div className={cx('img-small')}>
-                        {dataHouse.property?.images.slice(1).map((img, index) => (
-                            <img key={index} src={img} alt={`img-${index}`} />
-                        ))}
-                    </div>
+                    {dataHouse.property?.images.length > 1 ? (
+                        <div className={cx('img-small')}>
+                            {dataHouse.property?.images.slice(1).map((img, index) => (
+                                <img key={index} src={img} alt={`img-${index}`} />
+                            ))}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <div className={cx('btn-detail')}>
                     <button onClick={() => setActiveBtn(0)} id={cx(activeBtn === 0 && 'active-button')}>
@@ -80,10 +95,11 @@ function DetailHouse() {
                         </div> */}
                     </div>
                     <div className={cx('des')}>
-                        <p>{dataHouse.property?.description}</p>
+                        <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                     </div>
                 </div>
             </main>
+            <div id="map" className={cx('maps')}></div>
         </div>
     );
 }
