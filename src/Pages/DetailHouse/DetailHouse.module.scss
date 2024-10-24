@@ -109,7 +109,23 @@
 }
 
 .maps {
-    width: 90%;
-    height: 100vh;
-    margin: 0px auto;
+    display: block;
+    width: 70%; // Chiều rộng 80% của phần chứa
+    border-radius: 8px; // Bo tròn góc
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Đổ bóng nhẹ
+    overflow: hidden; // Ẩn nội dung tràn
+}
+
+.utils {
+    // display: grid;
+    // grid-template-columns: 60% 30%;
+    gap: 20px;
+    border: 1px solid #ccc;
+}
+
+.list-utils {
+    padding: 10px;
+    width: 50%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }

@@ -41,11 +41,7 @@ function ManagerBlog() {
                         {dataBDS.map((house) => (
                             <tr>
                                 <td>
-                                    <img
-                                        style={{ width: '200px' }}
-                                        src="https://onehousing.vn/image-resize/width=384,quality=80,format=webp/https://cdn.onehousing.vn/media/RESIDENTIAL/f67f6222-594e-4ff6-bb6f-7b5c60a74894/2c9429d891db5f1d019203c28ad918ca_CLONE/LOCAL_STREET/image_picker_7CF1C09C-80C2-47DD-A776-AEC94CE2DC33-27550-000011E647CC38EC_1726640360704.jpg"
-                                        alt=""
-                                    />
+                                    <img style={{ width: '200px' }} src={house?.property?.images[0]} alt="" />
                                 </td>
                                 <td>{house.postTitle}</td>
                                 <td>{house.postContent}</td>

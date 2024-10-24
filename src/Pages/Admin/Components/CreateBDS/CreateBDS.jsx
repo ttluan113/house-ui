@@ -26,7 +26,7 @@ function CreateBDS() {
     const [phuong, setPhuong] = useState('');
     const [province, setProvince] = useState('');
 
-    const [dataImg, setDataImg] = useState([]);
+    const [dataImg, setDataImg] = useState({});
 
     const [tinhthanh, setTinhThanh] = useState([]);
     const [idTinhThanh, setIdTinhThanh] = useState(0);
@@ -34,6 +34,8 @@ function CreateBDS() {
     const [idHuyen, setIdHuyen] = useState(0);
     const [xa, setXa] = useState([]);
     const [setIdXa] = useState(0);
+
+    const [checkCreateBDS, setCheckCreateBDS] = useState(false);
 
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -62,16 +64,17 @@ function CreateBDS() {
             axios.get(`https://esgoo.net/api-tinhthanh/3/${idHuyen}.htm`).then((res) => setXa(res.data.data));
         }
     }, [idHuyen]);
-
     const handlePostBDS = async () => {
-        const data = {
-            title,
-            description,
-            price,
-            soTang,
-            sophong,
-            soToilet,
-            userId,
+        setCheckCreateBDS(true);
+        const formData = new FormData();
+        const property = {
+            title: title,
+            description: description,
+            price: price,
+            soTang: soTang,
+            sophong: sophong,
+            soToilet: soToilet,
+            userId: userId,
             statusId: 1,
             ownerId: 1,
             categoryId: 4,
@@ -80,22 +83,27 @@ function CreateBDS() {
             district: district,
             province: province,
             area: area,
-            lat: 21.004751,
-            lon: 105.863135,
             age: 5,
         };
 
-        console.log(dataImg);
+        formData.append('property', new Blob([JSON.stringify(property)], { type: 'application/json' }));
+
+        for (let i = 0; i < dataImg.length; i++) {
+            formData.append('images', dataImg[i]);
+        }
 
         try {
-            const res = await requestCreateBDS(data);
+            const res = await requestCreateBDS(formData);
             if (res.status === 200) {
                 toast.success('Tạo Bất Động Sản Thành Công !!!');
             }
+            setCheckCreateBDS(false);
         } catch (error) {
             toast.error('Đã có lỗi xảy ra vui lòng thử lại !!!');
+            setCheckCreateBDS(false);
         }
     };
+
     const [imagePreviews, setImagePreviews] = useState([]);
     const handleImageChange = (files) => {
         const previews = [];
@@ -262,6 +270,17 @@ function CreateBDS() {
                     <label htmlFor="floatingInput">Số Toilet</label>
                 </div>
 
+                <div className="form-floating mb-3">
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="floatingInput"
+                        placeholder="name@example.com/"
+                        onChange={(e) => setUserId(e.target.value)}
+                    />
+                    <label htmlFor="floatingInput">Thêm nhà cho User Có ID</label>
+                </div>
+
                 <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
                     Upload Ảnh
                     <VisuallyHiddenInput type="file" multiple onChange={(e) => handleImageChange(e.target.files)} />
@@ -278,7 +297,7 @@ function CreateBDS() {
                     ))}
                 </div>
 
-                <Button variant="contained" onClick={handlePostBDS}>
+                <Button disabled={checkCreateBDS} variant="contained" onClick={handlePostBDS}>
                     Tạo Bất Động Sản
                 </Button>
             </div>

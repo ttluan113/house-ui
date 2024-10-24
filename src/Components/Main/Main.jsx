@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import UiBuyHouse from '../UiBuyHouse/UiBuyHouse';
 import CardBody from '../CardBody/CardBody';
 import { requestGetAllHouse } from '../../Config';
+import SlideHouse from '../SlideHouse/SlideHouse';
 
 const cx = classNames.bind(styles);
 
@@ -27,7 +28,7 @@ function Main() {
             <div className={cx('inner')}>
                 <div className={cx('header')}>
                     <div>
-                        <UiBuyHouse />
+                        <UiBuyHouse dataHouseAll={dataHouseAll} />
                     </div>
                 </div>
             </div>
@@ -40,10 +41,9 @@ function Main() {
                         <p>No houses available</p> // Hoặc hiển thị gì đó khi không có dữ liệu
                     )}
                 </div>
-
-                {/* <div className={cx('btn-watch-all')}>
-                    <button>Xem Tất Cả</button>
-                </div> */}
+            </div>
+            <div>
+                <SlideHouse dataHouseAll={dataHouseAll} />
             </div>
         </div>
     );

@@ -79,3 +79,14 @@ td:last-child {
     justify-content: center;
     gap: 10px;
 }
+
+.description {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

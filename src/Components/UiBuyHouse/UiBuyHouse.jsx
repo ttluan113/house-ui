@@ -3,29 +3,34 @@ import styles from './UiBuyHouse.module.scss';
 
 import Slider from 'react-slick';
 
-import banner1 from '../../assets/img/banner1.jpeg';
-import banner2 from '../../assets/img/banner2.jpg';
-import banner3 from '../../assets/img/banner3.jpg';
-import banner4 from '../../assets/img/banner4.jpg';
-
 import axios from 'axios';
 
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function UiBuyHouse() {
+function UiBuyHouse({ dataHouseAll }) {
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((currentSlide + 1) % dataHouseAll.length);
+        }, 7000);
+        return () => clearInterval(interval);
+    }, [currentSlide]);
+
     const settings = {
         dots: false,
         infinite: true,
-        speed: 500,
+        speed: 2000,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 2000,
+        autoplaySpeed: 5000,
+        beforeChange: (_oldIndex, newIndex) => setCurrentSlide(newIndex),
     };
 
     const navigate = useNavigate();
@@ -80,8 +85,6 @@ function UiBuyHouse() {
     const [tinhthanh, setTinhThanh] = useState([]);
     const [idTinhThanh, setIdTinhThanh] = useState(1);
     const [huyen, setHuyen] = useState([]);
-    const [idHuyen, setIdHuyen] = useState(0);
-    const [xa, setXa] = useState([]);
 
     useEffect(() => {
         axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
@@ -108,11 +111,38 @@ function UiBuyHouse() {
 
     return (
         <div className={cx('header-main')}>
+            <div className={cx('column-right')}>
+                <Slider {...settings}>
+                    {dataHouseAll.map((house, index) => (
+                        <div>
+                            <div className={cx('form-slide')}>
+                                <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
+                                <div
+                                    id={cx(currentSlide === index ? 'animation-text' : '')}
+                                    className={cx('text-slide')}
+                                >
+                                    <div className={cx('text-content')}>
+                                        <h2>{house.postTitle}</h2>
+                                        <h2>{house.price.toLocaleString() + ' VND'}</h2>
+                                        <h2>
+                                            {house.property.phuong} - {house.property.district}
+                                        </h2>
+                                        <button id={cx('btn-watch-house')}>
+                                            <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id={cx(currentSlide === index ? 'animation-img' : '')} className={cx('img-slide')}>
+                                    <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </Slider>
+            </div>
+
             <div className={cx('column-left')}>
-                <h2>
-                    Mua nhà OneHousing bán
-                    <br /> Bán nhà có OneHousing
-                </h2>
+                <h2>Tìm Kiếm Ngay</h2>
                 <div className={cx('search-house')}>
                     <div className={cx('btn-select')}>
                         <button className={cx('active-button')}>Dự án</button>
@@ -122,16 +152,17 @@ function UiBuyHouse() {
                             class="form-select"
                             aria-label="Default select example"
                             onChange={(e) => setProvince(e.target.value)}
+                            style={{ width: '70%' }}
                         >
                             <option selected>Chọn Thành Phố</option>
                             <option value="Hà Nội">Hà Nội</option>
                         </select>
 
                         <select
-                            style={{ width: '200px' }}
                             class="form-select"
                             aria-label="Default select example"
                             onChange={(e) => setDistrict(e.target.value)}
+                            style={{ width: '50%' }}
                         >
                             <option selected>Chọn quận</option>
                             {huyen.map((item) => (
@@ -409,23 +440,6 @@ function UiBuyHouse() {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className={cx('column-right')}>
-                <Slider {...settings}>
-                    <div>
-                        <img src={banner1} alt="Banner 1" style={{ width: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div>
-                        <img src={banner2} alt="Banner 2" style={{ width: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div>
-                        <img src={banner3} alt="Banner 3" style={{ width: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div>
-                        <img src={banner4} alt="Banner 4" style={{ width: '100%', objectFit: 'cover' }} />
-                    </div>
-                </Slider>
             </div>
         </div>
     );

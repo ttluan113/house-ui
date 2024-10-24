@@ -1,40 +1,58 @@
 import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
-import { useEffect, useState } from 'react';
-import { requestGetOneHouse } from '../../Config';
-
+import { useEffect, useState, useRef } from 'react';
+import { requestGetOneHouse, requestGetUtils } from '../../Config';
 import { useParams } from 'react-router-dom';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-defaulticon-compatibility';
 
-import { Loader } from 'google-maps';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
 
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
     const { id } = useParams();
-
     const [dataHouse, setDataHouse] = useState({});
-
     const [activeBtn, setActiveBtn] = useState(0);
+    const mapRef = useRef(null); // Tham chiếu đến thẻ chứa bản đồ
+    const [dataUtils, setDatautils] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetOneHouse(id);
+            const dataUtils = await requestGetUtils(res?.property?.propertyId);
             setDataHouse(res);
+            setDatautils(dataUtils);
         };
         fetchData();
-    }, []);
+    }, [id]);
 
-    const loader = new Loader('AIzaSyATaCUgFVhSI-CG33VK0H0opx7BHkhVmrg');
     useEffect(() => {
-        loader.load().then(function (google) {
-            const map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 21.004751, lng: 105.863135 },
-                zoom: 8,
+        if (dataHouse.property?.lat && dataHouse.property?.lon) {
+            const map = L.map(mapRef.current, {
+                center: [dataHouse.property.lat, dataHouse.property.lon],
+                zoom: 17, // Zoom mặc định
+                minZoom: 15, // Giới hạn zoom tối thiểu
+                maxZoom: 20, // Giới hạn zoom tối đa
+                scrollWheelZoom: false, // Vô hiệu hóa zoom bằng chuột
             });
-            console.log(map);
-        });
-    }, []);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }).addTo(map);
+
+            L.marker([dataHouse.property.lat, dataHouse.property.lon])
+                .addTo(map)
+                .bindPopup(dataHouse.property.location || 'Vị trí căn nhà')
+                .openPopup();
+
+            return () => map.remove(); // Cleanup khi component unmount
+        }
+    }, [dataHouse]);
 
     return (
         <div className={cx('wrapper')}>
@@ -47,14 +65,12 @@ function DetailHouse() {
                     <div className={cx('img-big')}>
                         {dataHouse.property?.images[0] && <img src={dataHouse.property.images[0]} alt="big-img" />}
                     </div>
-                    {dataHouse.property?.images.length > 1 ? (
+                    {dataHouse.property?.images.length > 1 && (
                         <div className={cx('img-small')}>
-                            {dataHouse.property?.images.slice(1).map((img, index) => (
+                            {dataHouse.property.images.slice(1).map((img, index) => (
                                 <img key={index} src={img} alt={`img-${index}`} />
                             ))}
                         </div>
-                    ) : (
-                        <></>
                     )}
                 </div>
                 <div className={cx('btn-detail')}>
@@ -89,17 +105,28 @@ function DetailHouse() {
                             <span>Số Toilet</span>
                             <p>{dataHouse.property?.soToilet || 0}</p>
                         </div>
-                        {/* <div className={cx('info-house-1')}>
-                            <span>Tình trạng bàn giao</span>
-                            <p>Đang thuê</p>
-                        </div> */}
                     </div>
                     <div className={cx('des')}>
                         <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                     </div>
+                    <div className={cx('utils')}>
+                        <div
+                            id="map"
+                            className={cx('maps')}
+                            ref={mapRef}
+                            style={{ width: '100%', height: '600px' }}
+                        ></div>
+                        <div className={cx('list-utils')}>
+                            {dataUtils.map((data) => (
+                                <Box sx={{ '& > legend': { mt: 2 } }}>
+                                    <Typography component="legend">{data.utilityName}</Typography>
+                                    <Rating name="read-only" value={5} readOnly />
+                                </Box>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </main>
-            <div id="map" className={cx('maps')}></div>
         </div>
     );
 }

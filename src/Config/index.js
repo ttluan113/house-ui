@@ -23,8 +23,13 @@ export const requestRegister = async (data) => {
     return res;
 };
 
-export const requestCreateBDS = async (data) => {
-    const res = await request.post('/properties', data, { headers: { Authorization: `Bearer ${token}` } });
+export const requestCreateBDS = async (formData) => {
+    const res = await request.post('/properties/properties-with-images', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
     return res;
 };
 
@@ -107,5 +112,22 @@ export const requestGetHouseHeart = async (userId) => {
 
 export const requestGetAllUser = async () => {
     const res = await request.get('/users', { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
+export const requestGetUtils = async (data) => {
+    const res = await request.get(`/utilities/near/${data}`, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
+export const requestCreateUtility = async (data) => {
+    const res = await request.post('/utilities', data, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
+export const requestPaymentsMomo = async (postId) => {
+    const res = await request.put(`/posts/${postId}/payments?amount=10000`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
 };

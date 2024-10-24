@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import ManagerUser from './Components/ManagerUser/ManagerUser';
 import ManagerBlog from './Components/ManagerBlog/ManagerBlog';
 import ManagerBDS from './Components/ManagerBDS/ManagerBDS';
-import ManagerStatusBDS from './Components/ManagerStatusBDS/ManagerStatusBDS';
+import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
 import CreateBDS from './Components/CreateBDS/CreateBDS';
 
 const cx = className.bind(styles);
@@ -51,7 +51,7 @@ function Admin() {
                         </li>
                         <li onClick={() => setCheckType(4)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faSignal} />
-                            Theo Dõi Và Quản Lý Trạng Thái Bất Động Sản
+                            Quản Lý Tiện Ích
                         </li>
                         <li onClick={() => setCheckType(5)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
@@ -67,7 +67,7 @@ function Admin() {
                     {checkType === 1 && <ManagerUser />}
                     {checkType === 2 && <ManagerBlog />}
                     {checkType === 3 && <ManagerBDS />}
-                    {checkType === 4 && <ManagerStatusBDS />}
+                    {checkType === 4 && <ManagerUtils />}
                     {checkType === 5 && <CreateBDS />}
                 </div>
             </main>
