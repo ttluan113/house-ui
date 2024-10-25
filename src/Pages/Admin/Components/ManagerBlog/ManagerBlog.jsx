@@ -2,6 +2,9 @@ import classNames from 'classnames/bind';
 import styles from './ManagerBlog.module.scss';
 import { requestGetStatusHouse, requestUpdateStatus } from '../../../../Config';
 
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 import { useState, useEffect } from 'react';
 
 const cx = classNames.bind(styles);
@@ -22,6 +25,17 @@ function ManagerBlog() {
         };
         fetchData();
     }, []);
+
+    const [page, setPage] = useState(1);
+    const productsPerPage = 4;
+    const startIndex = (page - 1) * productsPerPage;
+    const currentProducts = dataBDS.slice(startIndex, startIndex + productsPerPage);
+    const totalPages = Math.ceil(dataBDS.length / productsPerPage);
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div>
@@ -38,7 +52,7 @@ function ManagerBlog() {
                         </tr>
                     </thead>
                     <tbody>
-                        {dataBDS.map((house) => (
+                        {currentProducts.map((house) => (
                             <tr>
                                 <td>
                                     <img style={{ width: '200px' }} src={house?.property?.images[0]} alt="" />
@@ -50,9 +64,14 @@ function ManagerBlog() {
                                 <td>{house.status}</td>
                                 <td>
                                     <button
+                                        disabled={house.paymentStatus && (house.charged === 1) !== 1 ? true : false}
                                         onClick={() => handleSuccessBlog(house.postId)}
                                         type="button"
-                                        className="btn btn-primary"
+                                        className={`btn ${
+                                            house.paymentStatus !== 1 && house.charged === 1
+                                                ? 'btn-danger'
+                                                : 'btn-primary'
+                                        }`}
                                     >
                                         Duyệt Tin
                                     </button>
@@ -61,6 +80,17 @@ function ManagerBlog() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className={cx('pagination')}>
+                <Stack spacing={2}>
+                    <Pagination
+                        count={totalPages}
+                        color="primary"
+                        totalPages={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                    />
+                </Stack>
             </div>
         </div>
     );

@@ -5,13 +5,13 @@ import { requestPaymentsMomo, requestPostBlog } from '../../../Config';
 import styles from './ModalCreateBlog.module.scss';
 import classNames from 'classnames/bind';
 
+import { toast, ToastContainer } from 'react-toastify';
+
 import decodedJWT from '../../../utils/decodeJWT';
 
 const cx = classNames.bind(styles);
 
 function CreateBDS({ show, setShow, data }) {
-    const handleClose = () => setShow(false);
-
     const dataToken = decodedJWT();
 
     const [postTitle, setPostTitle] = useState('');
@@ -27,9 +27,9 @@ function CreateBDS({ show, setShow, data }) {
 
     useEffect(() => {
         if (data) {
-            // Khi có dữ liệu, cập nhật giá trị cho các state
             setPostTitle(data.title || '');
             setNewPrice(data.price || '');
+            setPostContent(data.description || '');
         }
     }, [data]);
 
@@ -52,7 +52,7 @@ function CreateBDS({ show, setShow, data }) {
     const handlePostBlog = async () => {
         const dataPostBlog = {
             postTitle,
-            postContent,
+            // postContent,
             charged,
             postType,
             userId: dataToken.userId,
@@ -61,39 +61,46 @@ function CreateBDS({ show, setShow, data }) {
             propertyId: data.propertyId,
         };
         try {
-            const res = await requestPostBlog(dataPostBlog);
-            if (res.status === 200) {
-                toast.success('Tạo Bất Động Sản Thành Công !!!');
-                handleClose();
+            if (charged === '0') {
+                const res = await requestPostBlog(dataPostBlog);
+                if (res.status === 200) {
+                    toast.success('Tạo Bất Động Sản Thành Công !!!');
+                    ``;
+                    handleClose();
+                }
+            } else if (charged === '1') {
+                setCharged('0');
+                setShow(false);
             }
-            setShow(false);
-        } catch (error) {
-            toast.error('Đã có lỗi xảy ra vui lòng thử lại !!!');
-        }
+        } catch (error) {}
+    };
+
+    const handleClose = () => {
+        setCharged('0');
+        setShow(false);
     };
 
     useEffect(() => {
         const uploadData = async () => {
             const dataPostBlog = {
                 postTitle,
-                postContent: '123',
                 charged,
                 postType,
+                // postContent,
                 userId: dataToken.userId,
                 status: 'pending',
                 price: newPrice || data.price,
                 propertyId: data.propertyId,
             };
+
             try {
                 const res = await requestPostBlog(dataPostBlog);
                 setPostIdPayments(res.postId);
-            } catch (error) {
-                toast.error('Đã có lỗi xảy ra vui lòng thử lại !!!');
-            }
+            } catch (error) {}
         };
 
         // Chỉ upload data nếu charged = 1 và show = true
-        if (charged === '1' && show === true) {
+        if (charged === '1') {
             uploadData();
         }
     }, [charged, show]);
@@ -108,6 +115,7 @@ function CreateBDS({ show, setShow, data }) {
     return (
         <>
             <Modal show={show} onHide={handleClose} size="lg">
+                <ToastContainer limit={1} />
                 <Modal.Header closeButton>
                     <Modal.Title>Tạo Bài Đăng</Modal.Title>
                 </Modal.Header>
