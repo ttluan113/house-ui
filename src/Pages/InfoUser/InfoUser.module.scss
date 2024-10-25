@@ -25,6 +25,10 @@
         align-items: center;
         transition: 0.3s;
         font-weight: 400;
+        #icons {
+            color: #007aff;
+            font-size: 20px;
+        }
     }
     li:hover {
         background-color: rgba(229, 229, 234);

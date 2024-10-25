@@ -4,7 +4,7 @@ import Header from '../../Components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faBlog, faChevronDown, faHouse, faPen, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HouseMe from './Components/HouseMe/HouseMe';
 import UploadHouse from './Components/UploadHouse/UploadHouse';
 import HouseHeart from './Components/HouseHeart/HouseHeart';
@@ -33,6 +33,10 @@ function InfoUser() {
         window.location.reload();
     };
 
+    useEffect(() => {
+        document.title = 'Thông tin cá nhân';
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <header>
@@ -43,19 +47,19 @@ function InfoUser() {
                 <div className={cx('column-left')}>
                     <ul>
                         <li onClick={handleCheckSubMenu}>
-                            <FontAwesomeIcon icon={faHeart} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faHeart} />
                             Yêu Thích
-                            <FontAwesomeIcon id={cx('icon')} icon={faChevronDown} />
+                            <FontAwesomeIcon id={cx('icons')} id={cx('icon')} icon={faChevronDown} />
                         </li>
                         {checkSubMenu ? (
                             <ul className={cx('sub-menu')}>
                                 <li onClick={() => setTypeMenu(7)}>
-                                    <FontAwesomeIcon icon={faHouse} />
+                                    <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                                     Căn Nhà
                                 </li>
 
                                 <li>
-                                    <FontAwesomeIcon icon={faBlog} />
+                                    <FontAwesomeIcon id={cx('icons')} icon={faBlog} />
                                     Bài Viết
                                 </li>
                             </ul>
@@ -64,14 +68,14 @@ function InfoUser() {
                         )}
 
                         <li onClick={() => setChecSubMenu2(!checkSubMenu2)}>
-                            <FontAwesomeIcon icon={faHouse} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                             Nhà Của Tôi
-                            <FontAwesomeIcon id={cx('icon')} icon={faChevronDown} />
+                            <FontAwesomeIcon id={cx('icons')} id={cx('icon')} icon={faChevronDown} />
                         </li>
                         {checkSubMenu2 ? (
                             <ul className={cx('sub-menu')}>
                                 <li onClick={() => setTypeMenu(10)}>
-                                    <FontAwesomeIcon icon={faHouse} />
+                                    <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                                     Căn Nhà Của Tôi
                                 </li>
                             </ul>
@@ -79,15 +83,15 @@ function InfoUser() {
                             <></>
                         )}
                         <li onClick={() => setTypeMenu(3)}>
-                            <FontAwesomeIcon icon={faPen} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faPen} />
                             Bài Viết Của Tôi
                         </li>
                         <li onClick={() => setTypeMenu(4)}>
-                            <FontAwesomeIcon icon={faUser} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faUser} />
                             Tài Khoản
                         </li>
                         <li onClick={hanleLogout} style={{ color: 'red' }}>
-                            <FontAwesomeIcon icon={faRightFromBracket} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faRightFromBracket} />
                             Đăng Xuất
                         </li>
                     </ul>

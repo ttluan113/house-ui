@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Slider from 'react-slick';
-import { faLayerGroup, faLocationArrow, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+import { faCrown, faLayerGroup, faLocationArrow, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { faFontAwesome, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
@@ -39,20 +38,10 @@ function CardBody({ house }) {
     };
 
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>
             <ToastContainer />
             <Link to={`/bds/${house?.postId}`}>
                 <div className={cx('slide')}>
-                    {/* <Slider {...settings}>
-                        <div className={cx('slider-container')}>
-                            {house?.property?.images.map((img) => (
-                                <div className={cx('img')}>
-                                    <img src={img} alt="" />
-                                </div>
-                            ))}
-                        </div>
-                    </Slider> */}
-
                     <div className={cx('img')}>
                         <img src={house?.property?.images[0]} alt="" />
                     </div>
@@ -60,6 +49,14 @@ function CardBody({ house }) {
             </Link>
 
             <div className={cx('info-home')}>
+                {house?.charged === 1 ? (
+                    <span id={cx('blog-charged')}>
+                        <FontAwesomeIcon icon={faCrown} />
+                        Bài viết ưu tiên
+                    </span>
+                ) : (
+                    <></>
+                )}
                 <div className={cx('title-home')}>
                     <h4>{house.postTitle}</h4>
                     <button onClick={() => handleHeartHouse(house?.postId)}>

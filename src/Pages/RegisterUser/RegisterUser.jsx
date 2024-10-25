@@ -4,7 +4,7 @@ import styles from './RegisterUser.module.scss';
 import Header from '../../Components/Header/Header';
 import { requestRegister } from '../../Config';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
@@ -33,6 +33,10 @@ function RegisterUser() {
             }
         }
     };
+
+    useEffect(() => {
+        document.title = 'Đăng ký tài khoản';
+    }, []);
 
     return (
         <div className={cx('wrapper')}>

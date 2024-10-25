@@ -54,6 +54,11 @@ function DetailHouse() {
         }
     }, [dataHouse]);
 
+    useEffect(() => {
+        document.title = `${dataHouse?.postTitle || 'Chi tiết nhà'}`;
+        console.log(dataHouse);
+    }, [dataHouse]);
+
     return (
         <div className={cx('wrapper')}>
             <header>
@@ -83,31 +88,33 @@ function DetailHouse() {
                 </div>
                 <div className={cx('info-house')}>
                     <h2 style={{ color: '#000' }}>{dataHouse.property?.title}</h2>
-                    <h4>Mô Tả Căn Nhà</h4>
-                    <div className={cx('column-detail')}>
-                        <div className={cx('info-house-1')}>
-                            <span>Giá Bán</span>
-                            <p>{Number(dataHouse.property?.price).toLocaleString()} VND</p>
+                    <div className={cx('info-detail-house')}>
+                        <div className={cx('column-detail')}>
+                            <div className={cx('info-house-1')}>
+                                <span>Giá Bán</span>
+                                <p>{Number(dataHouse.property?.price).toLocaleString()} VND</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Địa Chỉ</span>
+                                <p>{`${dataHouse.property?.location} - ${dataHouse.property?.phuong} - ${dataHouse.property?.district} - ${dataHouse.property?.province}`}</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Số Phòng</span>
+                                <p>{dataHouse.property?.sophong || 0}</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Số Tầng</span>
+                                <p>{dataHouse.property?.soTang || 0}</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Số Toilet</span>
+                                <p>{dataHouse.property?.soToilet || 0}</p>
+                            </div>
                         </div>
-                        <div className={cx('info-house-1')}>
-                            <span>Địa Chỉ</span>
-                            <p>{`${dataHouse.property?.location} - ${dataHouse.property?.phuong} - ${dataHouse.property?.district} - ${dataHouse.property?.province}`}</p>
+                        <div className={cx('des')}>
+                            <h4>Mô Tả Căn Nhà</h4>
+                            <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                         </div>
-                        <div className={cx('info-house-1')}>
-                            <span>Số Phòng</span>
-                            <p>{dataHouse.property?.sophong || 0}</p>
-                        </div>
-                        <div className={cx('info-house-1')}>
-                            <span>Số Tầng</span>
-                            <p>{dataHouse.property?.soTang || 0}</p>
-                        </div>
-                        <div className={cx('info-house-1')}>
-                            <span>Số Toilet</span>
-                            <p>{dataHouse.property?.soToilet || 0}</p>
-                        </div>
-                    </div>
-                    <div className={cx('des')}>
-                        <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                     </div>
                     <div className={cx('utils')}>
                         <div

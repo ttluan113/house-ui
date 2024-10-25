@@ -4,7 +4,7 @@ import styles from './LoginUser.module.scss';
 import Header from '../../Components/Header/Header';
 import { requestLogin } from '../../Config';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,6 +33,10 @@ function LoginUser() {
             }
         }
     };
+
+    useEffect(() => {
+        document.title = 'Đăng nhập ngay';
+    }, []);
 
     return (
         <div className={cx('wrapper')}>

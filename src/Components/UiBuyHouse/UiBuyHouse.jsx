@@ -18,7 +18,7 @@ function UiBuyHouse({ dataHouseAll }) {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentSlide((currentSlide + 1) % dataHouseAll.length);
-        }, 7000);
+        }, 6000);
         return () => clearInterval(interval);
     }, [currentSlide]);
 
@@ -113,31 +113,36 @@ function UiBuyHouse({ dataHouseAll }) {
         <div className={cx('header-main')}>
             <div className={cx('column-right')}>
                 <Slider {...settings}>
-                    {dataHouseAll.map((house, index) => (
-                        <div>
-                            <div className={cx('form-slide')}>
-                                <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
-                                <div
-                                    id={cx(currentSlide === index ? 'animation-text' : '')}
-                                    className={cx('text-slide')}
-                                >
-                                    <div className={cx('text-content')}>
-                                        <h2>{house.postTitle}</h2>
-                                        <h2>{house.price.toLocaleString() + ' VND'}</h2>
-                                        <h2>
-                                            {house.property.phuong} - {house.property.district}
-                                        </h2>
-                                        <button id={cx('btn-watch-house')}>
-                                            <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
-                                        </button>
+                    {dataHouseAll
+                        ?.filter((item) => item.charged === 1)
+                        .map((house, index) => (
+                            <div>
+                                <div className={cx('form-slide')}>
+                                    <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
+                                    <div
+                                        id={cx(currentSlide === index ? 'animation-text' : '')}
+                                        className={cx('text-slide')}
+                                    >
+                                        <div className={cx('text-content')}>
+                                            <h2>{house.postTitle}</h2>
+                                            {/* <h2>{house.price.toLocaleString() + ' VND'}</h2> */}
+                                            <h2>
+                                                {house.property.phuong} - {house.property.district}
+                                            </h2>
+                                            <button id={cx('btn-watch-house')}>
+                                                <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div
+                                        id={cx(currentSlide === index ? 'animation-img' : '')}
+                                        className={cx('img-slide')}
+                                    >
+                                        <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
                                     </div>
                                 </div>
-                                <div id={cx(currentSlide === index ? 'animation-img' : '')} className={cx('img-slide')}>
-                                    <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
-                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </Slider>
             </div>
 

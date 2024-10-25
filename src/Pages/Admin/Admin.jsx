@@ -5,7 +5,7 @@ import Header from '../../Components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faHouse, faPlus, faRightFromBracket, faShield, faSignal } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -26,6 +26,10 @@ function Admin() {
         Cookies.remove('Token');
         navigate('/');
     };
+
+    useEffect(() => {
+        document.title = 'Quản trị admin';
+    }, []);
 
     return (
         <div className={cx('wrapper')}>

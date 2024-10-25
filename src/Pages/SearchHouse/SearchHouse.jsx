@@ -109,6 +109,10 @@ function SearchHouse() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        document.title = 'Tìm Kiếm Nhà Cho Bạn';
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <header>

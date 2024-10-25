@@ -3,7 +3,7 @@
     background-color: rgba(0, 0, 0, 0.04);
     display: grid;
     grid-template-columns: 25% 10% 15% 20% 15% 15%;
-    padding-top: 30px;
+    padding: 30px;
     ul {
         display: flex;
         flex-direction: column;
@@ -20,7 +20,7 @@
         font-weight: 600;
     }
     #item-1 {
-        font-size: 17px;
+        font-size: 19px;
         font-weight: 700;
         padding-bottom: 15px;
     }

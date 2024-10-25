@@ -56,7 +56,10 @@ function HouseMe() {
                                 </td>
                                 <td>{house.title}</td>
                                 <td>
-                                    <div dangerouslySetInnerHTML={{ __html: house.description }}></div>
+                                    <div
+                                        style={{ height: '100px', overflowY: 'scroll' }}
+                                        dangerouslySetInnerHTML={{ __html: house.description }}
+                                    ></div>
                                 </td>
                                 <td>{Number(house.price).toLocaleString()} VND</td>
                                 <td>

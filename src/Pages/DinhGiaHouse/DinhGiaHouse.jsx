@@ -6,10 +6,15 @@ import imgBgr from '../../assets/img/test.png';
 
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 function DinhGiaHouse() {
+    useEffect(() => {
+        document.title = 'Thông tin định giá';
+    }, []);
+
     ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
     const data = {

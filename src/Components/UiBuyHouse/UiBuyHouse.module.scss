@@ -271,7 +271,11 @@ input[type='range'].thumb-right {
 .text-content {
     width: 70%;
     display: flex;
+    justify-content: center;
     flex-direction: column;
     gap: 20px;
-    animation-delay: 1s;
+    h2 {
+        font-size: 35px;
+        color: #fff;
+    }
 }
