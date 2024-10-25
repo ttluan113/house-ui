@@ -24,33 +24,39 @@ function DetailHouse() {
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetOneHouse(id);
-            const dataUtils = await requestGetUtils(res?.property?.propertyId);
             setDataHouse(res);
+            if (res.property.lon === null || res.property.lat === null) {
+                return;
+            }
+            const dataUtils = await requestGetUtils(res?.property?.propertyId);
             setDatautils(dataUtils);
         };
         fetchData();
     }, [id]);
 
     useEffect(() => {
-        if (dataHouse.property?.lat && dataHouse.property?.lon) {
+        if (dataHouse?.property?.lat && dataHouse?.property?.lon) {
             const map = L.map(mapRef.current, {
-                center: [dataHouse.property.lat, dataHouse.property.lon],
-                zoom: 17, // Zoom mặc định
-                minZoom: 15, // Giới hạn zoom tối thiểu
-                maxZoom: 20, // Giới hạn zoom tối đa
-                scrollWheelZoom: false, // Vô hiệu hóa zoom bằng chuột
+                center: [dataHouse?.property?.lat, dataHouse?.property?.lon],
+                zoom: 17, // Default zoom level
+                minZoom: 15, // Minimum zoom level
+                maxZoom: 20, // Maximum zoom level
+                scrollWheelZoom: false, // Disable zoom by scrolling
             });
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             }).addTo(map);
 
-            L.marker([dataHouse.property.lat, dataHouse.property.lon])
+            L.marker([dataHouse?.property?.lat, dataHouse?.property?.lon])
                 .addTo(map)
-                .bindPopup(dataHouse.property.location || 'Vị trí căn nhà')
+                .bindPopup(dataHouse?.property?.location || 'Vị trí căn nhà')
                 .openPopup();
 
-            return () => map.remove(); // Cleanup khi component unmount
+            // Cleanup when the component unmounts
+            return () => map.remove();
+        } else {
+            console.warn('Latitude or Longitude is missing, map will not be initialized.');
         }
     }, [dataHouse]);
 
@@ -124,9 +130,9 @@ function DetailHouse() {
                             style={{ width: '100%', height: '600px' }}
                         ></div>
                         <div className={cx('list-utils')}>
-                            {dataUtils.map((data) => (
+                            {dataUtils?.map((data) => (
                                 <Box sx={{ '& > legend': { mt: 2 } }}>
-                                    <Typography component="legend">{data.utilityName}</Typography>
+                                    <Typography component="legend">{data?.utilityName}</Typography>
                                     <Rating name="read-only" value={5} readOnly />
                                 </Box>
                             ))}

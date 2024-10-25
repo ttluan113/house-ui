@@ -26,8 +26,12 @@ function Slide1({ dataHouseAll }) {
     };
 
     useEffect(() => {
-        const dataDistrict = dataHouseAll.map((item) => item?.property?.district);
-        const uniqueDistricts = [...new Set(dataDistrict)];
+        let uniqueDistricts;
+        if (dataHouseAll.length > 0) {
+            const dataDistrict = dataHouseAll.map((item) => item?.property?.district);
+            uniqueDistricts = [...new Set(dataDistrict)];
+        }
+
         setDistrict(uniqueDistricts);
     }, [dataHouseAll]);
 
@@ -38,7 +42,7 @@ function Slide1({ dataHouseAll }) {
                 <button className={cx('btn-reset')} id={cx('active')} onClick={() => onClickButton(0, '')}>
                     Tất Cả
                 </button>
-                {district.map((item, index) => (
+                {district?.map((item, index) => (
                     <div className={cx('btn-search')}>
                         <button id={cx(checkType === index ? 'active' : '')} onClick={() => onClickButton(index, item)}>
                             Quận {item}
@@ -49,20 +53,21 @@ function Slide1({ dataHouseAll }) {
 
             <div>
                 <Slider {...settings}>
-                    {dataHouseAll
-                        .filter((item) => item?.property?.district === checkDistrict || checkDistrict === '')
-                        .map((item) => (
-                            <div>
-                                <div className={cx('slide')}>
-                                    <img src={item?.property?.images[0]} alt="" />
-                                    <div className={cx('info')}>
-                                        <h2>{item?.property?.location}</h2>
-                                        <span>{item?.property?.phuong}</span>
-                                        <p>{item.property?.price.toLocaleString() + ' VND'}</p>
+                    {dataHouseAll.length > 0 &&
+                        dataHouseAll
+                            .filter((item) => item?.property?.district === checkDistrict || checkDistrict === '')
+                            .map((item) => (
+                                <div>
+                                    <div className={cx('slide')}>
+                                        <img src={item?.property?.images[0]} alt="" />
+                                        <div className={cx('info')}>
+                                            <h2>{item?.property?.location}</h2>
+                                            <span>{item?.property?.phuong}</span>
+                                            <p>{item.property?.price.toLocaleString() + ' VND'}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                 </Slider>
             </div>
         </div>

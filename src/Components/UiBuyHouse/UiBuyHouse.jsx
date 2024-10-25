@@ -13,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function UiBuyHouse({ dataHouseAll }) {
+    console.log(dataHouseAll);
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
@@ -113,36 +114,37 @@ function UiBuyHouse({ dataHouseAll }) {
         <div className={cx('header-main')}>
             <div className={cx('column-right')}>
                 <Slider {...settings}>
-                    {dataHouseAll
-                        ?.filter((item) => item.charged === 1)
-                        .map((house, index) => (
-                            <div>
-                                <div className={cx('form-slide')}>
-                                    <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
-                                    <div
-                                        id={cx(currentSlide === index ? 'animation-text' : '')}
-                                        className={cx('text-slide')}
-                                    >
-                                        <div className={cx('text-content')}>
-                                            <h2>{house.postTitle}</h2>
-                                            {/* <h2>{house.price.toLocaleString() + ' VND'}</h2> */}
-                                            <h2>
-                                                {house.property.phuong} - {house.property.district}
-                                            </h2>
-                                            <button id={cx('btn-watch-house')}>
-                                                <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
-                                            </button>
+                    {dataHouseAll.length > 0 &&
+                        dataHouseAll
+                            ?.filter((item) => item.charged === 1)
+                            .map((house, index) => (
+                                <div>
+                                    <div className={cx('form-slide')}>
+                                        <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
+                                        <div
+                                            id={cx(currentSlide === index ? 'animation-text' : '')}
+                                            className={cx('text-slide')}
+                                        >
+                                            <div className={cx('text-content')}>
+                                                <h2>{house.postTitle}</h2>
+                                                {/* <h2>{house.price.toLocaleString() + ' VND'}</h2> */}
+                                                <h2>
+                                                    {house.property.phuong} - {house.property.district}
+                                                </h2>
+                                                <button id={cx('btn-watch-house')}>
+                                                    <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div
+                                            id={cx(currentSlide === index ? 'animation-img' : '')}
+                                            className={cx('img-slide')}
+                                        >
+                                            <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
                                         </div>
                                     </div>
-                                    <div
-                                        id={cx(currentSlide === index ? 'animation-img' : '')}
-                                        className={cx('img-slide')}
-                                    >
-                                        <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
-                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                 </Slider>
             </div>
 
