@@ -164,6 +164,7 @@ function DetailHouse() {
                             ))}
                         </div>
                     </div>
+                    {dataHouse?.charged === 1 && <h5>Tin được tài trợ bởi : MasterHouse</h5>}
                 </div>
             </main>
         </div>

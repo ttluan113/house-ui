@@ -1,6 +1,16 @@
 .main {
     width: 90%;
     margin: 0px auto;
+    h5 {
+        margin-top: 20px;
+        font-size: 20px;
+        border: 1px solid red;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+    }
 }
 
 .img-detail {
@@ -86,6 +96,7 @@
     align-items: center;
     p {
         font-weight: 600;
+        margin-bottom: 0px;
     }
 }
 

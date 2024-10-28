@@ -119,7 +119,6 @@ function CardBody({ house }) {
                         {`${house.property.phuong} - ${house.property.location} - ${house.property.district}  - ${house.property.province}`}
                     </span>
 
-                    {/* Hiển thị số ngày còn lại */}
                     <span>
                         <strong>{calculateDaysRemaining(house.createdAt)} ngày còn lại</strong>
                     </span>
