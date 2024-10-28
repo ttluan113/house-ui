@@ -13,21 +13,21 @@
 
 .img-big {
     width: 100%;
-    box-shadow: 0 0 10px #000;
-    overflow: hidden; /* ẩn phần ảnh khi nó vượt quá div */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); // Bóng mờ
+    overflow: hidden; /* Ẩn phần ảnh khi nó vượt quá div */
     position: relative;
+
     img {
         padding: 5px;
         width: 100%;
         height: 500px;
-        object-fit: cover;
+        object-fit: cover; /* Đảm bảo ảnh không bị méo */
         border-radius: 5px;
-        transition: 0.3s;
-        transition: transform 0.3s ease;
-    }
-    img:hover {
-        transform: scale(1.05);
-        transition: 0.3s;
+        transition: transform 0.3s ease; /* Chỉ cần một lần khai báo transition */
+
+        &:hover {
+            transform: scale(1.05); /* Phóng to khi hover */
+        }
     }
 }
 
@@ -36,8 +36,8 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    box-shadow: 0 0 10px #000;
-    overflow: hidden; /* ẩn phần ảnh khi nó vượt quá div */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); // Tăng độ mờ của bóng
+    overflow: hidden; /* Ẩn phần ảnh khi nó vượt quá div */
     position: relative;
 
     img {
@@ -45,13 +45,12 @@
         border-radius: 5px;
         width: 100%;
         height: 240px;
-        object-fit: cover;
-        transition: 0.3s;
-        transition: transform 0.3s ease;
-    }
-    img:hover {
-        transform: scale(1.05);
-        transition: 0.3s;
+        object-fit: cover; /* Đảm bảo ảnh không bị méo */
+        transition: transform 0.3s ease; /* Chỉ cần một lần khai báo transition */
+
+        &:hover {
+            transform: scale(1.05); /* Phóng to khi hover */
+        }
     }
 }
 

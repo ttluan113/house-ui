@@ -13,7 +13,6 @@ import { Link, useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function UiBuyHouse({ dataHouseAll }) {
-    console.log(dataHouseAll);
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
@@ -56,7 +55,7 @@ function UiBuyHouse({ dataHouseAll }) {
     const max = 500;
 
     const minPriceSearch = 0;
-    const maxPriceSearch = 100000000000;
+    const maxPriceSearch = 1000000000000;
 
     const handleMinChange = (e) => {
         const value = Math.min(Number(e.target.value), maxValue - 1);
@@ -84,20 +83,37 @@ function UiBuyHouse({ dataHouseAll }) {
     };
 
     const [tinhthanh, setTinhThanh] = useState([]);
-    const [idTinhThanh, setIdTinhThanh] = useState(1);
     const [huyen, setHuyen] = useState([]);
 
     useEffect(() => {
         axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
     }, []);
 
-    useEffect(() => {
-        axios.get(`https://esgoo.net/api-tinhthanh/2/0${1}.htm`).then((res) => setHuyen(res.data.data));
-    }, [idTinhThanh]);
+    // useEffect(() => {
+    //     axios.get(`https://esgoo.net/api-tinhthanh/2/0${1}.htm`).then((res) => setHuyen(res.data.data));
+    // }, [idTinhThanh]);
 
+    useEffect(() => {
+        if (province === 'Hà Nội' || province === 'Hồ Chí Minh') {
+            console.log(huyen);
+            const provinceId = province === 'Hà Nội' ? '01' : '79'; // Assume Hà Nội = 1, Hồ Chí Minh = 2
+            axios.get(`https://esgoo.net/api-tinhthanh/2/${provinceId}.htm`).then((res) => setHuyen(res.data.data));
+        } else {
+            setHuyen([]); // Reset district list if no matching province
+        }
+    }, [province]);
+
+    const calculateDaysRemaining = (createdAt) => {
+        const createdDate = new Date(createdAt);
+        const expiryDate = new Date(createdDate.setDate(createdDate.getDate() + 30)); // Thêm 30 ngày
+        const currentDate = new Date();
+        const timeDiff = expiryDate - currentDate; // Tính chênh lệch thời gian
+        const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Chuyển đổi từ milliseconds sang ngày
+        return daysRemaining < 0 ? 0 : daysRemaining; // Trả về 0 nếu đã quá hạn
+    };
     const handleSearchHouse = async () => {
         const data = {
-            ...(province && { province: province }),
+            province: province,
             minPrice: minPrice,
             maxPrice: maxPrice,
             minArea: minValue,
@@ -110,41 +126,17 @@ function UiBuyHouse({ dataHouseAll }) {
         navigate('/search');
     };
 
+    const images = ['/images/anh1.jpg', '/images/anh2.jpg', '/images/anh3.jpg']; // Paths to images in public folder
+
     return (
         <div className={cx('header-main')}>
             <div className={cx('column-right')}>
                 <Slider {...settings}>
-                    {dataHouseAll.length > 0 &&
-                        dataHouseAll
-                            ?.filter((item) => item.charged === 1)
-                            .map((house, index) => (
-                                <div>
-                                    <div className={cx('form-slide')}>
-                                        <img src={house.property.images[0]} alt="Banner 1" className={cx('img-big')} />
-                                        <div
-                                            id={cx(currentSlide === index ? 'animation-text' : '')}
-                                            className={cx('text-slide')}
-                                        >
-                                            <div className={cx('text-content')}>
-                                                <h2>{house.postTitle}</h2>
-                                                {/* <h2>{house.price.toLocaleString() + ' VND'}</h2> */}
-                                                <h2>
-                                                    {house.property.phuong} - {house.property.district}
-                                                </h2>
-                                                <button id={cx('btn-watch-house')}>
-                                                    <Link to={`/bds/${house.postId}`}>Xem Ngay</Link>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div
-                                            id={cx(currentSlide === index ? 'animation-img' : '')}
-                                            className={cx('img-slide')}
-                                        >
-                                            <img src={house.property.images[0]} alt="Banner 1" id={cx('img-slide')} />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                    {images.map((imgSrc, index) => (
+                        <div key={index} className={cx('slide-item')}>
+                            <img src={imgSrc} alt={`Slide ${index + 1}`} className={cx('img-slide')} />
+                        </div>
+                    ))}
                 </Slider>
             </div>
 
@@ -163,6 +155,7 @@ function UiBuyHouse({ dataHouseAll }) {
                         >
                             <option selected>Chọn Thành Phố</option>
                             <option value="Hà Nội">Hà Nội</option>
+                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                         </select>
 
                         <select
@@ -173,8 +166,8 @@ function UiBuyHouse({ dataHouseAll }) {
                         >
                             <option selected>Chọn quận</option>
                             {huyen.map((item) => (
-                                <option key={item.id} value={item.name}>
-                                    {item.name}
+                                <option key={item.id} value={item.full_name}>
+                                    {item.full_name}
                                 </option>
                             ))}
                         </select>
@@ -429,7 +422,7 @@ function UiBuyHouse({ dataHouseAll }) {
                                                 }}
                                             >
                                                 <span>0</span>
-                                                <span>10,000,000,000 VND</span>
+                                                <span>100,000,000,000 VND</span>
                                             </div>
                                         </div>
                                     </div>

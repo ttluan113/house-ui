@@ -25,6 +25,7 @@ function LoginUser() {
             if (res.status === 200) {
                 toast.success('Đăng nhập thành công !!!');
                 Cookies.set('Token', res.data.accessToken);
+                Cookies.set('Username', email);
                 navigate('/');
             }
         } catch (error) {

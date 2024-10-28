@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './CreateBDS.module.scss';
-import { requestCreateBDS, requestGetAllBlog, requestUploadImg } from '../../../../Config'; // Bỏ requestGetDistricts, requestGetPhuong, requestGetProvinces
+import { requestCreateBDS, requestUploadImg } from '../../../../Config'; // Bỏ requestGetDistricts, requestGetPhuong, requestGetProvinces
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback, useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ function CreateBDS() {
     const [huyen, setHuyen] = useState([]);
     const [idHuyen, setIdHuyen] = useState(0);
     const [xa, setXa] = useState([]);
-    const [setIdXa] = useState(0);
+    const [idXa, setIdXa] = useState(0);
 
     const [checkCreateBDS, setCheckCreateBDS] = useState(false);
 
@@ -65,6 +65,7 @@ function CreateBDS() {
         }
     }, [idHuyen]);
     const handlePostBDS = async () => {
+        console.log(phuong);
         setCheckCreateBDS(true);
         const formData = new FormData();
         const property = {
@@ -79,7 +80,7 @@ function CreateBDS() {
             ownerId: 1,
             categoryId: 4,
             location: location,
-            phuong: `Phường ${phuong}`,
+            phuong: phuong,
             district: district,
             province: province,
             area: area,
@@ -225,6 +226,7 @@ function CreateBDS() {
                     aria-label="Default select example"
                     onChange={(e) => {
                         const selectedValue = e.target.value;
+
                         setIdXa(selectedValue); // Đặt ID
                         const selectedItem = xa.find((item) => item.id === selectedValue);
                         setPhuong(selectedItem ? selectedItem.name : '');

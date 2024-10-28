@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import { useEffect, useState, useRef } from 'react';
-import { requestGetOneHouse, requestGetUtils } from '../../Config';
+import { requestGetSingleProperty, requestGetUtils } from '../../Config';
 import { useParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -14,58 +14,64 @@ import Typography from '@mui/material/Typography';
 
 const cx = classNames.bind(styles);
 
-function DetailHouse() {
+function DetailHouseBDS() {
     const { id } = useParams();
     const [dataHouse, setDataHouse] = useState({});
     const [activeBtn, setActiveBtn] = useState(0);
-    const mapRef = useRef(null); // Tham chiếu đến thẻ chứa bản đồ
-    const [dataUtils, setDatautils] = useState([]);
+    const mapRef = useRef(null);
+    const [dataUtils, setDataUtils] = useState([]);
+    const mapInstance = useRef(null); // Store the map instance
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetOneHouse(id);
-            setDataHouse(res);
-            if (res.property.lon === null || res.property.lat === null) {
-                return;
+            try {
+                const res = await requestGetSingleProperty(id);
+                console.log(res);
+                setDataHouse(res);
+
+                const utils = await requestGetUtils(res?.propertyId);
+                setDataUtils(utils);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-            const dataUtils = await requestGetUtils(res?.property?.propertyId);
-            setDatautils(dataUtils);
         };
         fetchData();
     }, [id]);
 
     useEffect(() => {
-        if (dataHouse?.property?.lat && dataHouse?.property?.lon) {
+        if (dataHouse?.lat && dataHouse?.lon && !mapInstance.current) {
             const map = L.map(mapRef.current, {
-                center: [dataHouse?.property?.lat, dataHouse?.property?.lon],
-                zoom: 17, // Default zoom level
-                minZoom: 15, // Minimum zoom level
-                maxZoom: 20, // Maximum zoom level
-                scrollWheelZoom: false, // Disable zoom by scrolling
+                center: [dataHouse.lat, dataHouse.lon],
+                zoom: 17,
+                minZoom: 15,
+                maxZoom: 20,
+                scrollWheelZoom: false,
             });
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             }).addTo(map);
 
-            L.marker([dataHouse?.property?.lat, dataHouse?.property?.lon])
+            L.marker([dataHouse.lat, dataHouse.lon])
                 .addTo(map)
-                .bindPopup(dataHouse?.property?.location || 'Vị trí căn nhà')
+                .bindPopup(dataHouse?.location || 'Vị trí căn nhà')
                 .openPopup();
 
-            // Cleanup when the component unmounts
-            return () => map.remove();
-        } else {
-            console.warn('Latitude or Longitude is missing, map will not be initialized.');
+            mapInstance.current = map;
+
+            // Cleanup on unmount
+            return () => {
+                mapInstance.current.remove();
+                mapInstance.current = null;
+            };
         }
     }, [dataHouse]);
 
     useEffect(() => {
-        document.title = `${dataHouse?.postTitle || 'Chi tiết nhà'}`;
-        console.log(dataHouse);
+        document.title = `${dataHouse?.title || 'Chi tiết nhà'}`;
     }, [dataHouse]);
 
-    // sap xep
+    // Code sắp xếp hình ảnh
     const [largestImage, setLargestImage] = useState(null);
     const getImageResolution = (src) => {
         return new Promise((resolve) => {
@@ -78,7 +84,7 @@ function DetailHouse() {
     // Find the image with the largest resolution
     useEffect(() => {
         const findLargestImage = async () => {
-            const resolutions = await Promise.all(dataHouse.property.images.map((img) => getImageResolution(img)));
+            const resolutions = await Promise.all(dataHouse.images.map((img) => getImageResolution(img)));
 
             const maxResImage = resolutions.reduce((max, current) =>
                 current.resolution > max.resolution ? current : max,
@@ -87,8 +93,8 @@ function DetailHouse() {
             setLargestImage(maxResImage.src);
         };
 
-        if (dataHouse?.property?.images.length) findLargestImage();
-    }, [dataHouse?.property?.images]);
+        if (dataHouse.images?.length) findLargestImage();
+    }, [dataHouse.images]);
 
     return (
         <div className={cx('wrapper')}>
@@ -100,9 +106,9 @@ function DetailHouse() {
                 <div className={cx('img-detail')}>
                     <div className={cx('img-big')}>{largestImage && <img src={largestImage} alt="big-img" />}</div>
 
-                    {dataHouse?.property?.images.length > 1 && (
+                    {dataHouse.images?.length > 1 && (
                         <div className={cx('img-small')}>
-                            {dataHouse?.property?.images
+                            {dataHouse.images
                                 .filter((img) => img !== largestImage) // Exclude largest image from thumbnails
                                 .map((img, index) => (
                                     <img key={index} src={img} alt={`img-${index}`} />
@@ -110,44 +116,50 @@ function DetailHouse() {
                         </div>
                     )}
                 </div>
+
                 <div className={cx('btn-detail')}>
-                    <button onClick={() => setActiveBtn(0)} id={cx(activeBtn === 0 && 'active-button')}>
+                    <button onClick={() => setActiveBtn(0)} className={cx({ 'active-button': activeBtn === 0 })}>
                         Giá Bán
                     </button>
-                    <button onClick={() => setActiveBtn(1)} id={cx(activeBtn === 1 && 'active-button')}>
+                    <button onClick={() => setActiveBtn(1)} className={cx({ 'active-button': activeBtn === 1 })}>
                         Tiện ích
                     </button>
                 </div>
+
                 <div className={cx('info-house')}>
-                    <h2 style={{ color: '#000' }}>{dataHouse.property?.title}</h2>
+                    <h2 style={{ color: '#000' }}>{dataHouse.title}</h2>
                     <div className={cx('info-detail-house')}>
                         <div className={cx('column-detail')}>
                             <div className={cx('info-house-1')}>
                                 <span>Giá Bán</span>
-                                <p>{Number(dataHouse.property?.price).toLocaleString()} VND</p>
+                                <p>{Number(dataHouse?.price).toLocaleString()} VND</p>
                             </div>
                             <div className={cx('info-house-1')}>
                                 <span>Địa Chỉ</span>
-                                <p>{`${dataHouse.property?.location} - ${dataHouse.property?.phuong} - ${dataHouse.property?.district} - ${dataHouse.property?.province}`}</p>
+                                <p>{`${dataHouse?.location || ''} - ${dataHouse?.phuong || ''} - ${
+                                    dataHouse?.district || ''
+                                } - ${dataHouse?.province || ''}`}</p>
                             </div>
                             <div className={cx('info-house-1')}>
                                 <span>Số Phòng</span>
-                                <p>{dataHouse.property?.sophong || 0}</p>
+                                <p>{dataHouse?.sophong || 0}</p>
                             </div>
                             <div className={cx('info-house-1')}>
                                 <span>Số Tầng</span>
-                                <p>{dataHouse.property?.soTang || 0}</p>
+                                <p>{dataHouse?.soTang || 0}</p>
                             </div>
                             <div className={cx('info-house-1')}>
                                 <span>Số Toilet</span>
-                                <p>{dataHouse.property?.soToilet || 0}</p>
+                                <p>{dataHouse?.soToilet || 0}</p>
                             </div>
                         </div>
+
                         <div className={cx('des')}>
                             <h4>Mô Tả Căn Nhà</h4>
-                            <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
+                            <div dangerouslySetInnerHTML={{ __html: dataHouse?.description }} />
                         </div>
                     </div>
+
                     <div className={cx('utils')}>
                         <div
                             id="map"
@@ -156,8 +168,8 @@ function DetailHouse() {
                             style={{ width: '100%', height: '600px' }}
                         ></div>
                         <div className={cx('list-utils')}>
-                            {dataUtils?.map((data) => (
-                                <Box sx={{ '& > legend': { mt: 2 } }}>
+                            {dataUtils?.map((data, index) => (
+                                <Box key={index} sx={{ '& > legend': { mt: 2 } }}>
                                     <Typography component="legend">{data?.utilityName}</Typography>
                                     <Rating name="read-only" value={5} readOnly />
                                 </Box>
@@ -170,4 +182,4 @@ function DetailHouse() {
     );
 }
 
-export default DetailHouse;
+export default DetailHouseBDS;
