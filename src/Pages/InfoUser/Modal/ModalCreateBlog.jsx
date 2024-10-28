@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 import { toast, ToastContainer } from 'react-toastify';
 
 import decodedJWT from '../../../utils/decodeJWT';
-
+import { Editor } from '@tinymce/tinymce-react';
 const cx = classNames.bind(styles);
 
 function CreateBDS({ show, setShow, data }) {
@@ -52,6 +52,7 @@ function CreateBDS({ show, setShow, data }) {
     const handlePostBlog = async () => {
         const dataPostBlog = {
             postTitle,
+            postContent,
             charged,
             postType,
             userId: dataToken.userId,
@@ -62,12 +63,14 @@ function CreateBDS({ show, setShow, data }) {
         try {
             if (charged === '0') {
                 const res = await requestPostBlog(dataPostBlog);
-                setShow(false);
-                toast.success('Tạo Bất Động Sản Thành Công !!!');
+                if (res.status === 200) {
+                    toast.success('Tạo Bất Động Sản Thành Công !!!');
+                    ``;
+                    handleClose();
+                }
             } else if (charged === '1') {
                 setCharged('0');
                 setShow(false);
-                toast.success('Tạo Bất Động Sản Thành Công !!!');
             }
         } catch (error) {}
     };
@@ -83,7 +86,7 @@ function CreateBDS({ show, setShow, data }) {
                 postTitle,
                 charged,
                 postType,
-                // postContent,
+                postContent,
                 userId: dataToken.userId,
                 status: 'pending',
                 price: newPrice || data.price,
@@ -112,7 +115,7 @@ function CreateBDS({ show, setShow, data }) {
     return (
         <>
             <Modal show={show} onHide={handleClose} size="lg">
-                <ToastContainer />
+                <ToastContainer limit={1} />
                 <Modal.Header closeButton>
                     <Modal.Title>Tạo Bài Đăng</Modal.Title>
                 </Modal.Header>
@@ -142,6 +145,16 @@ function CreateBDS({ show, setShow, data }) {
                                 />
                                 <label htmlFor="floatingInput">Tiêu Đề Bài Đăng</label>
                             </div>
+
+                            <Editor
+                                onEditorChange={(value) => setDescription(value)}
+                                apiKey="n4hxnmi16uwk9dmdgfx6nscsf8oc30528dlcub1mzsk8deqy"
+                                init={{
+                                    plugins:
+                                        'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                                }}
+                                initialValue={`${postContent}`}
+                            />
 
                             <select
                                 className="form-select mb-3"
