@@ -65,8 +65,8 @@ function CreateBDS({ show, setShow, data }) {
                 const res = await requestPostBlog(dataPostBlog);
                 if (res.status === 200) {
                     toast.success('Tạo Bất Động Sản Thành Công !!!');
-                    ``;
                     handleClose();
+                    setShow(false);
                 }
             } else if (charged === '1') {
                 setCharged('0');
