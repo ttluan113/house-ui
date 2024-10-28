@@ -52,7 +52,6 @@ function CreateBDS({ show, setShow, data }) {
     const handlePostBlog = async () => {
         const dataPostBlog = {
             postTitle,
-            // postContent,
             charged,
             postType,
             userId: dataToken.userId,
@@ -63,14 +62,12 @@ function CreateBDS({ show, setShow, data }) {
         try {
             if (charged === '0') {
                 const res = await requestPostBlog(dataPostBlog);
-                if (res.status === 200) {
-                    toast.success('Tạo Bất Động Sản Thành Công !!!');
-                    handleClose();
-                    setShow(false);
-                }
+                setShow(false);
+                toast.success('Tạo Bất Động Sản Thành Công !!!');
             } else if (charged === '1') {
                 setCharged('0');
                 setShow(false);
+                toast.success('Tạo Bất Động Sản Thành Công !!!');
             }
         } catch (error) {}
     };
@@ -115,7 +112,7 @@ function CreateBDS({ show, setShow, data }) {
     return (
         <>
             <Modal show={show} onHide={handleClose} size="lg">
-                <ToastContainer limit={1} />
+                <ToastContainer />
                 <Modal.Header closeButton>
                     <Modal.Title>Tạo Bài Đăng</Modal.Title>
                 </Modal.Header>

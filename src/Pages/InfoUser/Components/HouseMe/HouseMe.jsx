@@ -4,6 +4,7 @@ import styles from './HouseMe.module.scss';
 import { useEffect, useState } from 'react';
 import { requestGetAllBDS } from '../../../../Config';
 import CreateBDS from '../../Modal/ModalCreateBlog';
+import { ToastContainer } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 
@@ -28,6 +29,7 @@ function HouseMe() {
 
     return (
         <div className={cx('wrapper')}>
+            <ToastContainer />
             <h4>Căn bán cho OneHousing</h4>
             <div>
                 <table className="table table-bordered border-primary">
