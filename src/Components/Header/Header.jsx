@@ -10,7 +10,8 @@ const cx = classNames.bind(styles);
 
 function Header() {
     const token = Cookies.get('Token');
-
+    const username = Cookies.get('Username'); // Retrieve the username
+    console.log(username);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('logo')}>
@@ -31,11 +32,10 @@ function Header() {
 
             <div className={cx('user')}>
                 {token ? (
-                    <div className={cx('icon-user')}>
-                        <Link to={'/trang-ca-nhan'}>
-                            <button>
-                                <FontAwesomeIcon icon={faUser} />
-                            </button>
+                    <div className={cx('user-menu')}>
+                        <Link to={'/trang-ca-nhan'} className={cx('user-link')}>
+                            <div className={cx('avatar')}>{username.charAt(0).toUpperCase()}</div>
+                            <span className={cx('username')}>{username}</span>
                         </Link>
                     </div>
                 ) : (

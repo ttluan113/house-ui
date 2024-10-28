@@ -65,6 +65,31 @@ function DetailHouse() {
         console.log(dataHouse);
     }, [dataHouse]);
 
+    // sap xep
+    const [largestImage, setLargestImage] = useState(null);
+    const getImageResolution = (src) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve({ src, resolution: img.width * img.height });
+            img.src = src;
+        });
+    };
+
+    // Find the image with the largest resolution
+    useEffect(() => {
+        const findLargestImage = async () => {
+            const resolutions = await Promise.all(dataHouse.property.images.map((img) => getImageResolution(img)));
+
+            const maxResImage = resolutions.reduce((max, current) =>
+                current.resolution > max.resolution ? current : max,
+            );
+
+            setLargestImage(maxResImage.src);
+        };
+
+        if (dataHouse?.property?.images.length) findLargestImage();
+    }, [dataHouse?.property?.images]);
+
     return (
         <div className={cx('wrapper')}>
             <header>
@@ -73,14 +98,15 @@ function DetailHouse() {
 
             <main className={cx('main')}>
                 <div className={cx('img-detail')}>
-                    <div className={cx('img-big')}>
-                        {dataHouse.property?.images[0] && <img src={dataHouse.property.images[0]} alt="big-img" />}
-                    </div>
-                    {dataHouse.property?.images.length > 1 && (
+                    <div className={cx('img-big')}>{largestImage && <img src={largestImage} alt="big-img" />}</div>
+
+                    {dataHouse?.property?.images.length > 1 && (
                         <div className={cx('img-small')}>
-                            {dataHouse.property.images.slice(1).map((img, index) => (
-                                <img key={index} src={img} alt={`img-${index}`} />
-                            ))}
+                            {dataHouse?.property?.images
+                                .filter((img) => img !== largestImage) // Exclude largest image from thumbnails
+                                .map((img, index) => (
+                                    <img key={index} src={img} alt={`img-${index}`} />
+                                ))}
                         </div>
                     )}
                 </div>

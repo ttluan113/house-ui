@@ -7,7 +7,7 @@ import { faCrown, faLayerGroup, faLocationArrow, faSackDollar } from '@fortaweso
 import { faFontAwesome, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
-
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,14 +27,50 @@ function CardBody({ house }) {
     };
 
     const calculateDaysRemaining = (createdAt) => {
-        console.log(createdAt);
+        // Convert createdAt to a date object and reset time to 00:00:00
         const createdDate = new Date(createdAt);
-        const expiryDate = new Date(createdDate.setDate(createdDate.getDate() + 30)); // Thêm 30 ngày
+        createdDate.setHours(0, 0, 0, 0);
+
+        // Calculate the expiry date by adding 30 days
+        const expiryDate = new Date(createdDate);
+        expiryDate.setDate(expiryDate.getDate() + 30); // Add 30 days
+        expiryDate.setHours(0, 0, 0, 0); // Reset time for consistency
+
+        // Get the current date and reset its time to 00:00:00
         const currentDate = new Date();
-        const timeDiff = expiryDate - currentDate; // Tính chênh lệch thời gian
-        const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Chuyển đổi từ milliseconds sang ngày
-        return daysRemaining < 0 ? 0 : daysRemaining; // Trả về 0 nếu đã quá hạn
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Calculate the time difference in milliseconds
+        const timeDiff = expiryDate - currentDate;
+
+        // Convert milliseconds to days and ensure non-negative value
+        const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        return daysRemaining < 0 ? 0 : daysRemaining;
     };
+
+    const [largestImage, setLargestImage] = useState(null);
+    const getImageResolution = (src) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve({ src, resolution: img.width * img.height });
+            img.src = src;
+        });
+    };
+
+    // Find the image with the largest resolution
+    useEffect(() => {
+        const findLargestImage = async () => {
+            const resolutions = await Promise.all(house.property.images.map((img) => getImageResolution(img)));
+
+            const maxResImage = resolutions.reduce((max, current) =>
+                current.resolution > max.resolution ? current : max,
+            );
+
+            setLargestImage(maxResImage.src);
+        };
+
+        if (house?.property?.images.length) findLargestImage();
+    }, []);
 
     return (
         <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>
@@ -42,7 +78,7 @@ function CardBody({ house }) {
             <Link to={`/bds/${house?.postId}`}>
                 <div className={cx('slide')}>
                     <div className={cx('img')}>
-                        <img src={house?.property?.images[0]} alt="" />
+                        <img src={largestImage} alt="" />
                     </div>
                 </div>
             </Link>
