@@ -6,6 +6,7 @@ import LoginUser from '../Pages/LoginUser/LoginUser';
 import RegisterUser from '../Pages/RegisterUser/RegisterUser';
 import SearchHouse from '../Pages/SearchHouse/SearchHouse';
 import DinhGiaHouse from '../Pages/DinhGiaHouse/DinhGiaHouse';
+import DetailHouseBDS from '../Pages/DetailHouse/DetailHouseBDS';
 
 export const publicRoutes = [
     { path: '/', element: <App /> },
@@ -13,7 +14,7 @@ export const publicRoutes = [
     { path: '/account/register', element: <RegisterUser /> },
     { path: '/trang-ca-nhan', element: <InfoUser /> },
     { path: '/bds/:id', element: <DetailHouse /> },
-
+    { path: '/house/:id', element: <DetailHouseBDS /> },
     { path: '/search', element: <SearchHouse /> },
     { path: '/dinh-gia', element: <DinhGiaHouse /> },
 ];

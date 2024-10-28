@@ -1,8 +1,8 @@
 .main {
-    width: 90%;
+    width: 95%;
     display: grid;
-    grid-template-columns: 20% 75%;
-    gap: 50px;
+    grid-template-columns: 15% 85%;
+    gap: 15px;
     margin: 30px auto;
 }
 
@@ -45,5 +45,5 @@
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
+    padding: 0px;
 }

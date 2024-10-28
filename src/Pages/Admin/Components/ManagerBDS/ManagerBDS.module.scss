@@ -1,5 +1,5 @@
 .wrapper {
-    padding: 20px;
+    padding: 5px;
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -24,12 +24,12 @@ h4 {
         background-color: #007bff;
         color: white;
         text-align: center;
-        padding: 12px;
+        padding: 5px;
         font-size: 0.875rem;
     }
 
     td {
-        padding: 15px;
+        padding: 5px;
         text-align: center;
         font-size: 0.875rem;
         color: #333;
@@ -81,7 +81,7 @@ td:last-child {
 }
 
 .description {
-    height: 100px;
+    height: 125px;
     overflow-y: scroll;
 }
 

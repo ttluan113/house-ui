@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './HouseMe.module.scss';
 
 import { useEffect, useState } from 'react';
-import { requestGetBDS } from '../../../../Config';
+import { requestGetAllBDS } from '../../../../Config';
 import CreateBDS from '../../Modal/ModalCreateBlog';
 
 const cx = classNames.bind(styles);
@@ -20,7 +20,7 @@ function HouseMe() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetBDS();
+            const res = await requestGetAllBDS();
             setDataBDS(res);
         };
         fetchData();

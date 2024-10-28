@@ -1,11 +1,11 @@
 import classNames from 'classnames/bind';
 import styles from './ManagerBDS.module.scss';
 import { useEffect, useState } from 'react';
-import { requestGetBDS } from '../../../../Config';
+import { requestGetAllBDS } from '../../../../Config';
 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-
+import { useNavigate } from 'react-router-dom'; // Thêm useNavigate để điều hướng
 const cx = classNames.bind(styles);
 
 function ManagerBDS() {
@@ -13,18 +13,22 @@ function ManagerBDS() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetBDS();
+            const res = await requestGetAllBDS();
             setDataBDS(res);
         };
         fetchData();
     }, []);
-
+    const navigate = useNavigate(); // Khởi tạo điều hướng
     const [page, setPage] = useState(1);
     const productsPerPage = 4;
     const startIndex = (page - 1) * productsPerPage;
     const currentProducts = dataBDS.slice(startIndex, startIndex + productsPerPage);
     const totalPages = Math.ceil(dataBDS.length / productsPerPage);
-
+    // Điều hướng đến trang chi tiết căn nhà
+    const handleViewDetails = (id) => {
+        console.log(id);
+        navigate(`/house/${id}`);
+    };
     const handlePageChange = (event, value) => {
         setPage(value);
     };
@@ -49,9 +53,20 @@ function ManagerBDS() {
                     {currentProducts.map((house) => (
                         <tr style={{ height: '150px' }}>
                             <td>
-                                <img style={{ width: '150px' }} src={house.images} alt="" />
+                                <img style={{ width: '150px' }} src={house.images[0]} alt="" />
                             </td>
-                            <td>{house.title}</td>
+                            <td>
+                                <span
+                                    onClick={() => handleViewDetails(house.propertyId)}
+                                    onContextMenu={(e) => {
+                                        e.preventDefault(); // Prevent default context menu
+                                        window.open(`/house/${house.propertyId}`, '_blank'); // Open in new tab
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    {house.title}
+                                </span>
+                            </td>
                             <td>
                                 <div
                                     className={cx('description')}

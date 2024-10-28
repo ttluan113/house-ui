@@ -23,7 +23,7 @@ function SearchHouse() {
     const [maxValue, setMaxValue] = useState(500);
 
     const [minPrice, setMinPrice] = useState(1);
-    const [maxPrice, setMaxPrice] = useState(10000000000);
+    const [maxPrice, setMaxPrice] = useState(100000000000);
 
     const [province, setProvince] = useState('');
     const [checkPostType, setCheckPostType] = useState('');
@@ -37,7 +37,7 @@ function SearchHouse() {
     const max = 500;
 
     const minPriceSearch = 0;
-    const maxPriceSearch = 10000000000;
+    const maxPriceSearch = 100000000000;
 
     const handleMinChange = (e) => {
         const value = Math.min(Number(e.target.value), maxValue - 1);
@@ -75,8 +75,14 @@ function SearchHouse() {
     }, []);
 
     useEffect(() => {
-        axios.get(`https://esgoo.net/api-tinhthanh/2/0${1}.htm`).then((res) => setHuyen(res.data.data));
-    }, [idTinhThanh]);
+        if (province === 'Hà Nội' || province === 'Hồ Chí Minh') {
+            console.log(huyen);
+            const provinceId = province === 'Hà Nội' ? '01' : '79'; // Assume Hà Nội = 1, Hồ Chí Minh = 2
+            axios.get(`https://esgoo.net/api-tinhthanh/2/${provinceId}.htm`).then((res) => setHuyen(res.data.data));
+        } else {
+            setHuyen([]); // Reset district list if no matching province
+        }
+    }, [province]);
 
     const handleSearchHouse = async () => {
         const data = {
@@ -301,101 +307,35 @@ function SearchHouse() {
                                 )}
                             </div>
 
-                            <div className={cx('div-range')} style={{ width: '300px' }}>
-                                <div
-                                    onClick={() => {
-                                        setIsOpen2(!isOpen);
-                                        setIsOpen(false);
+                            <div className={cx('select-option')}>
+                                <select
+                                    className="form-select"
+                                    aria-label="Khoảng giá"
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (value === '0-1') {
+                                            setMinPrice(0);
+                                            setMaxPrice(1_000_000_000);
+                                        } else if (value === '1-5') {
+                                            setMinPrice(1_000_000_000);
+                                            setMaxPrice(5_000_000_000);
+                                        } else if (value === '5-10') {
+                                            setMinPrice(5_000_000_000);
+                                            setMaxPrice(10_000_000_000);
+                                        } else if (value === '>10') {
+                                            setMinPrice(10_000_000_000);
+                                            setMaxPrice(100_000_000_000); // Giá trị lớn hơn 10 tỉ
+                                        }
                                     }}
-                                    className={cx('label-range')}
                                 >
-                                    <span>
-                                        Khoảng giá {minPrice.toLocaleString()} - {maxPrice.toLocaleString()} VND
-                                    </span>
-                                    <FontAwesomeIcon icon={faChevronDown} />
-                                </div>
-                                {isOpen2 && (
-                                    <div className={cx('modal-range')}>
-                                        <div className={cx('input-search')}>
-                                            <div>
-                                                <div className="form-floating mb-3">
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        id="minPrice"
-                                                        placeholder="Từ"
-                                                        value={minPrice}
-                                                        onChange={(e) => setMinPrice(Number(e.target.value))}
-                                                    />
-                                                    <label htmlFor="minPrice">Từ</label>
-                                                </div>
-                                            </div>
-                                            <FontAwesomeIcon icon={faArrowRight} />
-                                            <div>
-                                                <div className="form-floating mb-3">
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        id="maxPrice"
-                                                        placeholder="Đến"
-                                                        value={maxPrice}
-                                                        onChange={(e) => setMaxPrice(Number(e.target.value))}
-                                                    />
-                                                    <label htmlFor="maxPrice">Đến</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="range-slider">
-                                            <div className="slider-container">
-                                                <input
-                                                    type="range"
-                                                    value={minPrice}
-                                                    min={minPriceSearch}
-                                                    max={maxPriceSearch}
-                                                    className="thumb thumb-left"
-                                                    onChange={handleMinPrice}
-                                                />
-                                                <input
-                                                    type="range"
-                                                    value={maxPrice}
-                                                    min={minPriceSearch}
-                                                    max={maxPriceSearch}
-                                                    className="thumb thumb-right"
-                                                    onChange={handleMaxPrice}
-                                                />
-                                                <div className="slider-track"></div>
-                                                <div
-                                                    className="slider-range"
-                                                    style={{
-                                                        left: `${(minPrice / maxPriceSearch) * 100}%`,
-                                                        right: `${100 - (maxPrice / maxPriceSearch) * 100}%`,
-                                                    }}
-                                                ></div>
-
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        paddingTop: '10px',
-                                                    }}
-                                                >
-                                                    <span>0</span>
-                                                    <span>10,000,000,000 VND</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className={cx('btn-apply-price')}>
-                                            <button onClick={() => setIsOpen2(false)} id={cx('close')}>
-                                                Bỏ Chọn
-                                            </button>
-                                            <button onClick={handleSearch} id={cx('succes')}>
-                                                Áp Dụng
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
+                                    <option value="" selected>
+                                        Chọn khoảng giá
+                                    </option>
+                                    <option value="0-1">0 - 1 Tỉ</option>
+                                    <option value="1-5">1 - 5 Tỉ</option>
+                                    <option value="5-10">5 - 10 Tỉ</option>
+                                    <option value=">10">Trên 10 Tỉ</option>
+                                </select>
                             </div>
                         </div>
                         <div className={cx('search-input')}>
@@ -406,8 +346,8 @@ function SearchHouse() {
                             >
                                 <option selected>Chọn quận</option>
                                 {huyen.map((item) => (
-                                    <option key={item.id} value={item.name}>
-                                        {item.name}
+                                    <option key={item.id} value={item.full_name}>
+                                        {item.full_name}
                                     </option>
                                 ))}
                             </select>
@@ -419,6 +359,7 @@ function SearchHouse() {
                             >
                                 <option selected>Chọn Thành Phố</option>
                                 <option value="Hà Nội">Hà Nội</option>
+                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                             </select>
                             <button onClick={handleSearchHouse}>Tìm kiếm</button>
                         </div>

@@ -49,7 +49,7 @@ function InfoUser() {
                         <li onClick={handleCheckSubMenu}>
                             <FontAwesomeIcon id={cx('icons')} icon={faHeart} />
                             Yêu Thích
-                            <FontAwesomeIcon id={cx('icons')} id={cx('icon')} icon={faChevronDown} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faChevronDown} />
                         </li>
                         {checkSubMenu ? (
                             <ul className={cx('sub-menu')}>
@@ -70,7 +70,7 @@ function InfoUser() {
                         <li onClick={() => setChecSubMenu2(!checkSubMenu2)}>
                             <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                             Nhà Của Tôi
-                            <FontAwesomeIcon id={cx('icons')} id={cx('icon')} icon={faChevronDown} />
+                            <FontAwesomeIcon id={cx('icons')} icon={faChevronDown} />
                         </li>
                         {checkSubMenu2 ? (
                             <ul className={cx('sub-menu')}>

@@ -33,13 +33,18 @@ export const requestCreateBDS = async (formData) => {
     return res;
 };
 
-export const requestGetAllBlog = async () => {
-    const res = await request.get('/properties', { headers: { Authorization: `Bearer ${token}` } });
+export const requestGetSingleProperty = async (id) => {
+    const res = await request.get(`/properties/${id}`, { headers: { Authorization: `Bearer ${token}` } });
     return res.data;
 };
 
-export const requestGetBDS = async () => {
-    const res = await request.get('/properties/user/1', { headers: { Authorization: `Bearer ${token}` } });
+export const requestGetBDSByUserId = async (id) => {
+    const res = await request.get(`/properties/user/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
+export const requestGetAllBDS = async () => {
+    const res = await request.get('/properties', { headers: { Authorization: `Bearer ${token}` } });
     return res.data;
 };
 

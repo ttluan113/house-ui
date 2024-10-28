@@ -42,7 +42,7 @@ function CreateBDS({ show, setShow, data }) {
     }, [charged]);
 
     useEffect(() => {
-        if (postType === 'for_sale') {
+        if (postType === 'for_rent') {
             setCheckPostType(false);
         } else {
             setCheckPostType(true);
@@ -152,8 +152,8 @@ function CreateBDS({ show, setShow, data }) {
                                 onChange={(e) => setPostType(e.target.value)}
                             >
                                 <option value="">Loại Bất Động Sản</option>
-                                <option value="for_sale">Cho Thuê</option>
-                                <option value="for_rent">Đăng Bán</option>
+                                <option value="for_rent">Cho Thuê</option>
+                                <option value="for_sale">Đăng Bán</option>
                             </select>
 
                             <select
