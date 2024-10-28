@@ -12,8 +12,6 @@ import Cookies from 'js-cookie';
 import ManagerUser from './Components/ManagerUser/ManagerUser';
 import ManagerBlog from './Components/ManagerBlog/ManagerBlog';
 import ManagerBDS from './Components/ManagerBDS/ManagerBDS';
-import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
-import CreateBDS from './Components/CreateBDS/CreateBDS';
 
 const cx = className.bind(styles);
 
@@ -71,8 +69,6 @@ function Admin() {
                     {checkType === 1 && <ManagerUser />}
                     {checkType === 2 && <ManagerBlog />}
                     {checkType === 3 && <ManagerBDS />}
-                    {checkType === 4 && <ManagerUtils />}
-                    {checkType === 5 && <CreateBDS />}
                 </div>
             </main>
         </div>

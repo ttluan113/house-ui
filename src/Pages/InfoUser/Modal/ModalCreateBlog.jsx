@@ -63,11 +63,8 @@ function CreateBDS({ show, setShow, data }) {
         try {
             if (charged === '0') {
                 const res = await requestPostBlog(dataPostBlog);
-                if (res.status === 200) {
-                    toast.success('Tạo Bất Động Sản Thành Công !!!');
-                    ``;
-                    handleClose();
-                }
+                toast.success('Tạo Bất Động Sản Thành Công !!!');
+                setShow(false);
             } else if (charged === '1') {
                 setCharged('0');
                 setShow(false);

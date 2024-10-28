@@ -11,6 +11,8 @@ import HouseHeart from './Components/HouseHeart/HouseHeart';
 
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import CreateBDS from './Components/CreateHouse/CreateBDS';
+import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
 
 const cx = className.bind(styles);
 
@@ -78,6 +80,16 @@ function InfoUser() {
                                     <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                                     Căn Nhà Của Tôi
                                 </li>
+
+                                <li onClick={() => setTypeMenu(11)}>
+                                    <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
+                                    Tạo Bất Động Sản
+                                </li>
+
+                                <li onClick={() => setTypeMenu(5)}>
+                                    <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
+                                    Tạo Tiện Ích Cho Bài Đắng
+                                </li>
                             </ul>
                         ) : (
                             <></>
@@ -101,6 +113,8 @@ function InfoUser() {
                     {typeMenu === 10 ? <HouseMe /> : <></>}
                     {typeMenu === 6 ? <UploadHouse /> : <></>}
                     {typeMenu === 7 ? <HouseHeart /> : <></>}
+                    {typeMenu === 11 ? <CreateBDS /> : <></>}
+                    {typeMenu === 5 ? <ManagerUtils /> : <></>}
                 </div>
             </main>
         </div>

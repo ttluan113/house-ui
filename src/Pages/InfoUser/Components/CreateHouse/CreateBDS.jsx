@@ -1,14 +1,17 @@
 import classNames from 'classnames/bind';
 import styles from './CreateBDS.module.scss';
-import { requestCreateBDS, requestUploadImg } from '../../../../Config'; // Bỏ requestGetDistricts, requestGetPhuong, requestGetProvinces
+import { requestCreateBDS } from '../../../../Config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { Editor } from '@tinymce/tinymce-react';
+
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -19,7 +22,6 @@ function CreateBDS() {
     const [sophong, setSophong] = useState(0);
     const [soTang, setSoTang] = useState(0);
     const [soToilet, setSoToilet] = useState(0);
-    const [userId, setUserId] = useState(0);
     const [district, setDistrict] = useState('');
     const [area, setArea] = useState(0);
     const [location, setLocation] = useState('');
@@ -36,6 +38,10 @@ function CreateBDS() {
     const [idXa, setIdXa] = useState(0);
 
     const [checkCreateBDS, setCheckCreateBDS] = useState(false);
+
+    const token = Cookies.get('Token');
+
+    const decodeJwt = jwtDecode(token);
 
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -64,8 +70,8 @@ function CreateBDS() {
             axios.get(`https://esgoo.net/api-tinhthanh/3/${idHuyen}.htm`).then((res) => setXa(res.data.data));
         }
     }, [idHuyen]);
+
     const handlePostBDS = async () => {
-        console.log(phuong);
         setCheckCreateBDS(true);
         const formData = new FormData();
         const property = {
@@ -75,7 +81,7 @@ function CreateBDS() {
             soTang: soTang,
             sophong: sophong,
             soToilet: soToilet,
-            userId: userId,
+            userId: decodeJwt.userId,
             statusId: 1,
             ownerId: 1,
             categoryId: 4,
@@ -95,9 +101,7 @@ function CreateBDS() {
 
         try {
             const res = await requestCreateBDS(formData);
-            if (res.status === 200) {
-                toast.success('Tạo Bất Động Sản Thành Công !!!');
-            }
+            toast.success('Tạo Bất Động Sản Thành Công !!!');
             setCheckCreateBDS(false);
         } catch (error) {
             toast.error('Đã có lỗi xảy ra vui lòng thử lại !!!');
@@ -270,17 +274,6 @@ function CreateBDS() {
                         onChange={(e) => setSoToilet(e.target.value)}
                     />
                     <label htmlFor="floatingInput">Số Toilet</label>
-                </div>
-
-                <div className="form-floating mb-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="name@example.com/"
-                        onChange={(e) => setUserId(e.target.value)}
-                    />
-                    <label htmlFor="floatingInput">Thêm nhà cho User Có ID</label>
                 </div>
 
                 <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
