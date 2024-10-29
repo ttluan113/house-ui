@@ -84,7 +84,7 @@ function CreateBDS() {
             userId: decodeJwt.userId,
             statusId: 1,
             ownerId: 1,
-            categoryId: 4,
+            categoryId: 1,
             location: location,
             phuong: phuong,
             district: district,

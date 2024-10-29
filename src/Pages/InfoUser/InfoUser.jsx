@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import CreateBDS from './Components/CreateHouse/CreateBDS';
 import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
+import MyPost from './Components/MyPost/MyPost';
 
 const cx = className.bind(styles);
 
@@ -25,6 +26,7 @@ function InfoUser() {
     const navigate = useNavigate();
 
     const handleCheckSubMenu = () => {
+        setTypeMenu(7);
         setChecSubMenu(!checkSubMenu);
         // setTypeMenu(1);
     };
@@ -48,27 +50,6 @@ function InfoUser() {
             <main className={cx('main')}>
                 <div className={cx('column-left')}>
                     <ul>
-                        <li onClick={handleCheckSubMenu}>
-                            <FontAwesomeIcon id={cx('icons')} icon={faHeart} />
-                            Yêu Thích
-                            <FontAwesomeIcon id={cx('icons')} icon={faChevronDown} />
-                        </li>
-                        {checkSubMenu ? (
-                            <ul className={cx('sub-menu')}>
-                                <li onClick={() => setTypeMenu(7)}>
-                                    <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
-                                    Căn Nhà
-                                </li>
-
-                                <li>
-                                    <FontAwesomeIcon id={cx('icons')} icon={faBlog} />
-                                    Bài Viết
-                                </li>
-                            </ul>
-                        ) : (
-                            <></>
-                        )}
-
                         <li onClick={() => setChecSubMenu2(!checkSubMenu2)}>
                             <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
                             Nhà Của Tôi
@@ -94,6 +75,10 @@ function InfoUser() {
                         ) : (
                             <></>
                         )}
+                        <li onClick={handleCheckSubMenu}>
+                            <FontAwesomeIcon id={cx('icons')} icon={faHeart} />
+                            Yêu Thích
+                        </li>
                         <li onClick={() => setTypeMenu(3)}>
                             <FontAwesomeIcon id={cx('icons')} icon={faPen} />
                             Bài Viết Của Tôi
@@ -115,6 +100,9 @@ function InfoUser() {
                     {typeMenu === 7 ? <HouseHeart /> : <></>}
                     {typeMenu === 11 ? <CreateBDS /> : <></>}
                     {typeMenu === 5 ? <ManagerUtils /> : <></>}
+
+                    {/* Bai viet cua toi */}
+                    {typeMenu === 3 ? <MyPost /> : <></>}
                 </div>
             </main>
         </div>

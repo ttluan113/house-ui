@@ -97,6 +97,7 @@ function DetailHouse() {
             </header>
 
             <main className={cx('main')}>
+                {dataHouse?.charged === 1 && <h5>Tin được tài trợ bởi : MasterHouse</h5>}
                 <div className={cx('img-detail')}>
                     <div className={cx('img-big')}>{largestImage && <img src={largestImage} alt="big-img" />}</div>
 
@@ -155,16 +156,16 @@ function DetailHouse() {
                             ref={mapRef}
                             style={{ width: '100%', height: '600px' }}
                         ></div>
+
                         <div className={cx('list-utils')}>
-                            {dataUtils?.map((data) => (
-                                <Box sx={{ '& > legend': { mt: 2 } }}>
+                            {dataUtils?.map((data, index) => (
+                                <Box key={index} sx={{ '& > legend': { mt: 2 } }} className={cx('utility-item')}>
                                     <Typography component="legend">{data?.utilityName}</Typography>
                                     <Rating name="read-only" value={5} readOnly />
                                 </Box>
                             ))}
                         </div>
                     </div>
-                    {dataHouse?.charged === 1 && <h5>Tin được tài trợ bởi : MasterHouse</h5>}
                 </div>
             </main>
         </div>

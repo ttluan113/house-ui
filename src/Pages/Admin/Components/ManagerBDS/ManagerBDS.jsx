@@ -1,36 +1,59 @@
 import classNames from 'classnames/bind';
 import styles from './ManagerBDS.module.scss';
 import { useEffect, useState } from 'react';
-import { requestGetAllBDS } from '../../../../Config';
-
+import { requestGetAllBDS, requestCountPostsByPropertyId } from '../../../../Config';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useNavigate } from 'react-router-dom'; // Thêm useNavigate để điều hướng
+import { useNavigate } from 'react-router-dom';
+
 const cx = classNames.bind(styles);
 
 function ManagerBDS() {
     const [dataBDS, setDataBDS] = useState([]);
+    const [postCounts, setPostCounts] = useState({});
+    const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const productsPerPage = 4;
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetAllBDS();
             setDataBDS(res);
+
+            // Fetch post counts for each property
+            const counts = await Promise.all(
+                res.map(async (house) => {
+                    const count = await requestCountPostsByPropertyId(house.propertyId);
+
+                    return { propertyId: house.propertyId, count };
+                }),
+            );
+
+            // Update postCounts with results
+            const countsMap = counts.reduce((acc, { propertyId, count }) => {
+                acc[propertyId] = count;
+                return acc;
+            }, {});
+            setPostCounts(countsMap);
         };
         fetchData();
     }, []);
-    const navigate = useNavigate(); // Khởi tạo điều hướng
-    const [page, setPage] = useState(1);
-    const productsPerPage = 4;
+
     const startIndex = (page - 1) * productsPerPage;
     const currentProducts = dataBDS.slice(startIndex, startIndex + productsPerPage);
     const totalPages = Math.ceil(dataBDS.length / productsPerPage);
-    // Điều hướng đến trang chi tiết căn nhà
+
     const handleViewDetails = (id) => {
-        console.log(id);
         navigate(`/house/${id}`);
     };
+
     const handlePageChange = (event, value) => {
         setPage(value);
+    };
+
+    const handleViewPosts = (propertyId) => {
+        console.log(propertyId);
+        navigate(`/posts/properties/${propertyId}`); // Navigate to the posts for the selected property
     };
 
     return (
@@ -47,11 +70,12 @@ function ManagerBDS() {
                         <th scope="col">Số Phòng</th>
                         <th scope="col">Số Tầng</th>
                         <th scope="col">Số Phòng Toilet</th>
+                        <th scope="col">Số Bài đăng</th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentProducts.map((house) => (
-                        <tr style={{ height: '150px' }}>
+                        <tr key={house.propertyId} style={{ height: '150px' }}>
                             <td>
                                 <img style={{ width: '150px' }} src={house.images[0]} alt="" />
                             </td>
@@ -59,8 +83,8 @@ function ManagerBDS() {
                                 <span
                                     onClick={() => handleViewDetails(house.propertyId)}
                                     onContextMenu={(e) => {
-                                        e.preventDefault(); // Prevent default context menu
-                                        window.open(`/house/${house.propertyId}`, '_blank'); // Open in new tab
+                                        e.preventDefault();
+                                        window.open(`/house/${house.propertyId}`, '_blank');
                                     }}
                                     style={{ cursor: 'pointer' }}
                                 >
@@ -79,7 +103,16 @@ function ManagerBDS() {
                             </td>
                             <td>{house.sophong}</td>
                             <td>{house.soTang}</td>
-                            <td style={{ height: '150px' }}>{house.soToilet}</td>
+                            <td>{house.soToilet}</td>
+                            <td>
+                                <span
+                                    onClick={() => handleViewPosts(house.propertyId)} // Navigate to the posts
+                                    style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                                >
+                                    {postCounts[house.propertyId] || 0}
+                                </span>
+                            </td>{' '}
+                            {/* Display post count */}
                         </tr>
                     ))}
                 </tbody>
@@ -87,13 +120,7 @@ function ManagerBDS() {
 
             <div className={cx('pagination')}>
                 <Stack spacing={2}>
-                    <Pagination
-                        count={totalPages}
-                        color="primary"
-                        totalPages={totalPages}
-                        page={page}
-                        onChange={handlePageChange}
-                    />
+                    <Pagination count={totalPages} color="primary" page={page} onChange={handlePageChange} />
                 </Stack>
             </div>
         </div>

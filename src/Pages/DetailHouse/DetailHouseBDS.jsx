@@ -169,7 +169,7 @@ function DetailHouseBDS() {
                         ></div>
                         <div className={cx('list-utils')}>
                             {dataUtils?.map((data, index) => (
-                                <Box key={index} sx={{ '& > legend': { mt: 2 } }}>
+                                <Box key={index} sx={{ '& > legend': { mt: 2 } }} className={cx('utility-item')}>
                                     <Typography component="legend">{data?.utilityName}</Typography>
                                     <Rating name="read-only" value={5} readOnly />
                                 </Box>
