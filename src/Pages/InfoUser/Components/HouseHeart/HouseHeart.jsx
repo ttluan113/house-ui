@@ -12,11 +12,14 @@ function HouseHeart() {
     const token = decodedJWT();
 
     const [dataHouse, setDataHouse] = useState([]);
+    const [favoritePostIds, setFavoritePostIds] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetHouseHeart(token.userId);
+
             setDataHouse(res);
+            setFavoritePostIds(res.map((house) => house.postId)); // Extract post IDs
         };
         fetchData();
     }, []);
@@ -24,7 +27,7 @@ function HouseHeart() {
     return (
         <div className={cx('wrapper')}>
             {dataHouse.map((house) => (
-                <CardBody house={house} />
+                <CardBody house={house} isFavorite={favoritePostIds.includes(house.postId)} />
             ))}
         </div>
     );

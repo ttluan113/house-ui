@@ -3,8 +3,8 @@ import styles from './CardBody.module.scss';
 
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrown, faLayerGroup, faLocationArrow, faSackDollar } from '@fortawesome/free-solid-svg-icons';
-import { faFontAwesome, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faCrown, faLayerGroup, faLocationArrow, faSackDollar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faFontAwesome } from '@fortawesome/free-regular-svg-icons';
 import { requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
 import { useState, useEffect } from 'react';
@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(styles);
 
-function CardBody({ house }) {
+function CardBody({ house, isFavorite }) {
     const token = decodedJWT();
 
     const handleHeartHouse = async (postId) => {
@@ -95,7 +95,7 @@ function CardBody({ house }) {
                 <div className={cx('title-home')}>
                     <h4>{house.postTitle}</h4>
                     <button onClick={() => handleHeartHouse(house?.postId)}>
-                        <FontAwesomeIcon icon={faHeart} />
+                        <FontAwesomeIcon icon={faHeart} style={{ color: isFavorite ? 'red' : 'gray' }} />
                     </button>
                 </div>
                 <div className={cx('info-home')}>
