@@ -1,5 +1,8 @@
+.wrapper {
+    width: 85%;
+    margin: 0 auto;
+}
 .main {
-    width: 90%;
     margin: 0px auto;
     h5 {
         margin-top: 20px;
@@ -138,8 +141,28 @@
 }
 
 .list-utils {
-    padding: 10px;
-    width: 50%;
+    margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* Chia 4 cột */
+    gap: 20px; /* Khoảng cách giữa các mục */
+    padding: 10px;
+}
+
+.utility-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Canh đều các thành phần */
+    align-items: center; /* Căn giữa nội dung theo trục ngang */
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 140px; /* Đảm bảo các ô có cùng chiều cao */
+    text-align: center; /* Căn giữa văn bản */
+}
+
+.utility-item p,
+.utility-item legend {
+    margin: 0; /* Xóa khoảng cách thừa */
 }

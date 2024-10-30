@@ -56,6 +56,19 @@ export const requestGetStatusHouse = async () => {
     );
     return res.data;
 };
+export const requestCountPostsByPropertyId = async (propertyId) => {
+    const res = await request.get(`/posts/count/${propertyId}`, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
+export const requestGetPostsByPropertyId = async (propertyId) => {
+    const res = await request.get(`/posts/properties/${propertyId}`, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+export const requestGetPostByUserId = async (id) => {
+    const res = await request.get(`/posts/users/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
 
 export const requestUpdateStatus = async (id) => {
     const res = await request.put(

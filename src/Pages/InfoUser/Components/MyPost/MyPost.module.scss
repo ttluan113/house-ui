@@ -1,0 +1,18 @@
+.my-posts {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.result {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 16px; /* Space between cards */
+    width: 100%;
+    max-width: 1200px; /* Optional: Limit the grid's width */
+}
+
+.loading {
+    text-align: center;
+    margin-top: 20px;
+}
