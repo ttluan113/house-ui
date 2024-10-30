@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import ManagerUser from './Components/ManagerUser/ManagerUser';
 import ManagerBlog from './Components/ManagerBlog/ManagerBlog';
 import ManagerBDS from './Components/ManagerBDS/ManagerBDS';
+import ManagerStatistics from './Components/ManagerStatistics/ManagerStatistics';
 
 const cx = className.bind(styles);
 
@@ -59,6 +60,11 @@ function Admin() {
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
                             Tạo Bất Động Sản
                         </li>
+
+                        <li onClick={() => setCheckType(6)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
+                            Thống kê
+                        </li>
                         <li onClick={handleLogout}>
                             <FontAwesomeIcon style={{ color: 'red' }} icon={faRightFromBracket} />
                             Đăng Xuất
@@ -69,6 +75,7 @@ function Admin() {
                     {checkType === 1 && <ManagerUser />}
                     {checkType === 2 && <ManagerBlog />}
                     {checkType === 3 && <ManagerBDS />}
+                    {checkType === 6 && <ManagerStatistics />}
                 </div>
             </main>
         </div>
