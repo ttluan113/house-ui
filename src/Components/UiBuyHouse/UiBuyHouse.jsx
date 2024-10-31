@@ -348,95 +348,39 @@ function UiBuyHouse({ dataHouseAll }) {
                             )}
                         </div>
 
-                        <div className={cx('div-range')}>
-                            <div onClick={() => setIsOpen2(!isOpen2)} className={cx('label-range')}>
-                                <span>
-                                    Khoảng giá {minPrice.toLocaleString()} - {maxPrice.toLocaleString()} VND
-                                </span>
-                                <FontAwesomeIcon icon={faChevronDown} />
-                            </div>
-                            {isOpen2 && (
-                                <div className={cx('modal-range')}>
-                                    <div className={cx('input-search')}>
-                                        <div>
-                                            <div className="form-floating mb-3">
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    id="minPrice"
-                                                    placeholder="Từ"
-                                                    value={minPrice}
-                                                    onChange={(e) => setMinPrice(Number(e.target.value))}
-                                                />
-                                                <label htmlFor="minPrice">Từ</label>
-                                            </div>
-                                        </div>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                        <div>
-                                            <div className="form-floating mb-3">
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    id="maxPrice"
-                                                    placeholder="Đến"
-                                                    value={maxPrice}
-                                                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                                                />
-                                                <label htmlFor="maxPrice">Đến</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="range-slider">
-                                        <div className="slider-container">
-                                            <input
-                                                type="range"
-                                                value={minPrice}
-                                                min={minPriceSearch}
-                                                max={maxPriceSearch}
-                                                className="thumb thumb-left"
-                                                onChange={handleMinPrice}
-                                            />
-                                            <input
-                                                type="range"
-                                                value={maxPrice}
-                                                min={minPriceSearch}
-                                                max={maxPriceSearch}
-                                                className="thumb thumb-right"
-                                                onChange={handleMaxPrice}
-                                            />
-                                            <div className="slider-track"></div>
-                                            <div
-                                                className="slider-range"
-                                                style={{
-                                                    left: `${(minPrice / maxPriceSearch) * 100}%`,
-                                                    right: `${100 - (maxPrice / maxPriceSearch) * 100}%`,
-                                                }}
-                                            ></div>
-
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    paddingTop: '10px',
-                                                }}
-                                            >
-                                                <span>0</span>
-                                                <span>100,000,000,000 VND</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className={cx('btn-apply-price')}>
-                                        <button onClick={() => setIsOpen2(false)} id={cx('close')}>
-                                            Bỏ Chọn
-                                        </button>
-                                        <button onClick={handleSearch} id={cx('succes')}>
-                                            Áp Dụng
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
+                        <div className={cx('select-option')}>
+                            <select
+                                className="form-select"
+                                aria-label="Khoảng giá"
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === '0-1') {
+                                        setMinPrice(0);
+                                        setMaxPrice(1_000_000_000);
+                                    } else if (value === '1-5') {
+                                        setMinPrice(1_000_000_001);
+                                        setMaxPrice(5_000_000_000);
+                                    } else if (value === '5-10') {
+                                        setMinPrice(5_000_000_001);
+                                        setMaxPrice(10_000_000_000);
+                                    } else if (value === '>10') {
+                                        setMinPrice(10_000_000_001);
+                                        setMaxPrice(100_000_000_000); // Giá trị lớn hơn 10 tỉ
+                                    } else {
+                                        // Reset to default values or handle the empty case if needed
+                                        setMinPrice(0);
+                                        setMaxPrice(0);
+                                    }
+                                }}
+                            >
+                                <option value="" selected>
+                                    Chọn khoảng giá
+                                </option>
+                                <option value="0-1">0 - 1 Tỉ</option>
+                                <option value="1-5">1 - 5 Tỉ</option>
+                                <option value="5-10">5 - 10 Tỉ</option>
+                                <option value=">10">Trên 10 Tỉ</option>
+                            </select>
                         </div>
                     </div>
                 </div>

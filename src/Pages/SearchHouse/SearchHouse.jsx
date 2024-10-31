@@ -317,13 +317,13 @@ function SearchHouse() {
                                             setMinPrice(0);
                                             setMaxPrice(1_000_000_000);
                                         } else if (value === '1-5') {
-                                            setMinPrice(1_000_000_000);
+                                            setMinPrice(1_000_000_001);
                                             setMaxPrice(5_000_000_000);
                                         } else if (value === '5-10') {
-                                            setMinPrice(5_000_000_000);
+                                            setMinPrice(5_000_000_001);
                                             setMaxPrice(10_000_000_000);
                                         } else if (value === '>10') {
-                                            setMinPrice(10_000_000_000);
+                                            setMinPrice(10_000_000_001);
                                             setMaxPrice(100_000_000_000); // Giá trị lớn hơn 10 tỉ
                                         }
                                     }}
