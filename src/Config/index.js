@@ -170,3 +170,17 @@ export const requestVerifyAccount = async (email) => {
     });
     return res;
 };
+
+/// get pending status bds user
+
+export const requestGetBDSPending = async () => {
+    const res = await request.get('/properties/status?status=pending', {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};
+
+export const requestChangeStatusHouse = async (id) => {
+    const res = await request.put(`/properties/${id}/status`, null, { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};

@@ -1,10 +1,15 @@
 import classNames from 'classnames/bind';
 import styles from './ManagerUserUpBDS.module.scss';
 import { useEffect, useState } from 'react';
-import { requestGetAllBDS, requestCountPostsByPropertyId } from '../../../../Config';
+import { requestChangeStatusHouse, requestGetBDSPending } from '../../../../Config';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router-dom';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Button from '@mui/material/Button';
 
 const cx = classNames.bind(styles);
 
@@ -17,24 +22,8 @@ function ManagerUpLoadBDS() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetAllBDS();
+            const res = await requestGetBDSPending();
             setDataBDS(res);
-
-            // Fetch post counts for each property
-            const counts = await Promise.all(
-                res.map(async (house) => {
-                    const count = await requestCountPostsByPropertyId(house.propertyId);
-
-                    return { propertyId: house.propertyId, count };
-                }),
-            );
-
-            // Update postCounts with results
-            const countsMap = counts.reduce((acc, { propertyId, count }) => {
-                acc[propertyId] = count;
-                return acc;
-            }, {});
-            setPostCounts(countsMap);
         };
         fetchData();
     }, []);
@@ -51,14 +40,21 @@ function ManagerUpLoadBDS() {
         setPage(value);
     };
 
-    const handleViewPosts = (propertyId) => {
-        console.log(propertyId);
-        navigate(`/posts/properties/${propertyId}`); // Navigate to the posts for the selected property
+    const handleChangeStatus = async (id) => {
+        try {
+            const res = await requestChangeStatusHouse(id);
+            toast.success('Duyệt Thành Công !!!');
+            const res2 = await requestGetBDSPending();
+            setDataBDS(res2);
+        } catch (error) {
+            toast.error('Lỗi Vui Lòng Thử Lại !!!');
+        }
     };
 
     return (
         <div className={cx('wrapper')}>
-            <h4>Danh sách BDS</h4>
+            <ToastContainer />
+            <h4>Quản Lý Bài Đăng Bất Động Sản</h4>
             <table className={cx('table table-bordered border-primary')}>
                 <thead>
                     <tr>
@@ -70,7 +66,7 @@ function ManagerUpLoadBDS() {
                         <th scope="col">Số Phòng</th>
                         <th scope="col">Số Tầng</th>
                         <th scope="col">Số Phòng Toilet</th>
-                        <th scope="col">Số Bài đăng</th>
+                        <th scope="col">Hành Động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,14 +101,10 @@ function ManagerUpLoadBDS() {
                             <td>{house.soTang}</td>
                             <td>{house.soToilet}</td>
                             <td>
-                                <span
-                                    onClick={() => handleViewPosts(house.propertyId)} // Navigate to the posts
-                                    style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                                >
-                                    {postCounts[house.propertyId] || 0}
-                                </span>
-                            </td>{' '}
-                            {/* Display post count */}
+                                <Button onClick={() => handleChangeStatus(house.propertyId)} variant="contained">
+                                    Duyệt
+                                </Button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

@@ -37,6 +37,8 @@ function CreateBDS() {
     const [xa, setXa] = useState([]);
     const [idXa, setIdXa] = useState(0);
 
+    const [categoryId, setCategoryId] = useState(0);
+
     const [checkCreateBDS, setCheckCreateBDS] = useState(false);
 
     const token = Cookies.get('Token');
@@ -84,7 +86,7 @@ function CreateBDS() {
             userId: decodeJwt.userId,
             statusId: 1,
             ownerId: 1,
-            categoryId: 1,
+            categoryId,
             location: location,
             phuong: phuong,
             district: district,
@@ -163,10 +165,14 @@ function CreateBDS() {
                     <label htmlFor="floatingInput">Giá Bất Động Sản</label>
                 </div>
 
-                <select className="form-select mb-3" aria-label="Default select example">
+                <select
+                    className="form-select mb-3"
+                    aria-label="Default select example"
+                    onChange={(e) => setCategoryId(e.target.value)}
+                >
                     <option defaultValue>Loại Bất Động Sản</option>
-                    <option value="4">Nhà Đất</option>
-                    <option value="5">Chung Cư</option>
+                    <option value="1">Nhà Đất</option>
+                    <option value="2">Chung Cư</option>
                 </select>
 
                 <div className="form-floating mb-3">
