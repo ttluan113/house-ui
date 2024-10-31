@@ -8,6 +8,7 @@ import SearchHouse from '../Pages/SearchHouse/SearchHouse';
 import DinhGiaHouse from '../Pages/DinhGiaHouse/DinhGiaHouse';
 import DetailHouseBDS from '../Pages/DetailHouse/DetailHouseBDS';
 import PostByProperty from '../Pages/Admin/Components/ManagerBDS/PostByProperty';
+import VerifyAccount from '../Pages/verifyaccount/page';
 export const publicRoutes = [
     { path: '/', element: <App /> },
     { path: '/account/login', element: <LoginUser /> },
@@ -17,6 +18,7 @@ export const publicRoutes = [
     { path: '/house/:id', element: <DetailHouseBDS /> },
     { path: '/search', element: <SearchHouse /> },
     { path: '/dinh-gia', element: <DinhGiaHouse /> },
+    { path: '/verifyaccount', element: <VerifyAccount /> },
     { path: '/posts/properties/:propertyId', element: <PostByProperty /> }, // New route for posts
 ];
 

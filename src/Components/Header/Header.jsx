@@ -4,7 +4,7 @@ import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
@@ -36,6 +36,7 @@ function Header() {
                         <Link to={'/trang-ca-nhan'} className={cx('user-link')}>
                             <div className={cx('avatar')}>{username.charAt(0).toUpperCase()}</div>
                             <span className={cx('username')}>{username}</span>
+                            <FontAwesomeIcon id={cx('icon')} icon={faCheckCircle} />
                         </Link>
                     </div>
                 ) : (

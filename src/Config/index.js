@@ -143,9 +143,30 @@ export const requestCreateUtility = async (data) => {
     return res.data;
 };
 
+export const requestGetAllUtils = async () => {
+    const res = await request.get('/utilities', { headers: { Authorization: `Bearer ${token}` } });
+    return res.data;
+};
+
 export const requestPaymentsMomo = async (postId) => {
     const res = await request.put(`/posts/${postId}/payments?amount=10000`, null, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
+};
+
+/// auth
+
+export const requestAuthMe = async (id) => {
+    const res = await request.get(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};
+
+export const requestVerifyAccount = async (email) => {
+    const res = await request.post(`/users/send-verification-email?email=${email}`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res;
 };

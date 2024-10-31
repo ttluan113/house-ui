@@ -39,6 +39,7 @@ function ManagerBlog() {
     return (
         <div className={cx('wrapper')}>
             <div>
+                <h4>Quản Lý Bất Động Sản</h4>
                 <table className="table table-bordered border-primary">
                     <thead>
                         <tr>

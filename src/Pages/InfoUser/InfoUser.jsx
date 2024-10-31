@@ -14,6 +14,7 @@ import Cookies from 'js-cookie';
 import CreateBDS from './Components/CreateHouse/CreateBDS';
 import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
 import MyPost from './Components/MyPost/MyPost';
+import AuthUser from './Components/AuthUser/AuthUser';
 
 const cx = className.bind(styles);
 
@@ -100,7 +101,7 @@ function InfoUser() {
                     {typeMenu === 7 ? <HouseHeart /> : <></>}
                     {typeMenu === 11 ? <CreateBDS /> : <></>}
                     {typeMenu === 5 ? <ManagerUtils /> : <></>}
-
+                    {typeMenu === 4 ? <AuthUser /> : <></>}
                     {/* Bai viet cua toi */}
                     {typeMenu === 3 ? <MyPost /> : <></>}
                 </div>

@@ -4,7 +4,7 @@ import Header from '../../Components/Header/Header';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faHouse, faPlus, faRightFromBracket, faShield, faSignal } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faPlus, faRightFromBracket, faShield, faSignal, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -13,6 +13,8 @@ import ManagerUser from './Components/ManagerUser/ManagerUser';
 import ManagerBlog from './Components/ManagerBlog/ManagerBlog';
 import ManagerBDS from './Components/ManagerBDS/ManagerBDS';
 import ManagerStatistics from './Components/ManagerStatistics/ManagerStatistics';
+import ManagerUtils from './Components/ManagerUtils/ManagerUtils';
+import ManagerUpLoadBDS from './Components/ManagerUserUpBDS/ManagerUserUpBDS';
 
 const cx = className.bind(styles);
 
@@ -52,7 +54,12 @@ function Admin() {
                             Quản Lý Bất Động Sản
                             <FontAwesomeIcon id={cx('icon')} />
                         </li>
-                        <li onClick={() => setCheckType(4)}>
+                        <li onClick={() => setCheckType(12)}>
+                            <FontAwesomeIcon id={cx('icon')} icon={faUpload} />
+                            Quản Lý Bài Đăng Bất Động Sản
+                            <FontAwesomeIcon id={cx('icon')} />
+                        </li>
+                        <li onClick={() => setCheckType(11)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faSignal} />
                             Quản Lý Tiện Ích
                         </li>
@@ -65,6 +72,7 @@ function Admin() {
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
                             Thống kê
                         </li>
+
                         <li onClick={handleLogout}>
                             <FontAwesomeIcon style={{ color: 'red' }} icon={faRightFromBracket} />
                             Đăng Xuất
@@ -76,6 +84,8 @@ function Admin() {
                     {checkType === 2 && <ManagerBlog />}
                     {checkType === 3 && <ManagerBDS />}
                     {checkType === 6 && <ManagerStatistics />}
+                    {checkType === 11 && <ManagerUtils />}
+                    {checkType === 12 && <ManagerUpLoadBDS />}
                 </div>
             </main>
         </div>
