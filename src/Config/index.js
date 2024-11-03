@@ -161,6 +161,9 @@ export const requestPaymentsMomo = async (postId) => {
 /// auth
 
 export const requestAuthMe = async (id) => {
+    if (!token) {
+        return;
+    }
     const res = await request.get(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });

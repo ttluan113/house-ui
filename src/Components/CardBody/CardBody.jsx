@@ -65,13 +65,15 @@ function CardBody({ house, isFavorite }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetHouseHeart(token.userId);
-            const postId = res.map((item) => item.postId);
+            const res = await requestGetHouseHeart(token?.userId);
+            const postId = res.map((item) => item?.postId);
             setDataFavorite(postId);
         };
-
+        if (!token) {
+            return;
+        }
         fetchData();
-    }, [token.userId]);
+    }, [token?.userId]);
 
     return (
         <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>

@@ -8,7 +8,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility';
 import { Box, Typography, Rating, Tabs, Tab } from '@mui/material';
-
+// import ChatModal from './ChatModal.jsx';
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
@@ -220,6 +220,17 @@ function DetailHouse() {
                         </div>
                     </div>
                 </div>
+                <Button onClick={() => setChatOpen(true)} variant="outlined" color="primary">
+                    Chat with Author
+                </Button>
+
+                {/* Chat Modal */}
+                {/* <ChatModal
+                    open={chatOpen}
+                    onClose={() => setChatOpen(false)}
+                    currentUserId={currentUserId}
+                    postAuthorId={postAuthorId}
+                /> */}
             </main>
         </div>
     );

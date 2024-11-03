@@ -51,7 +51,7 @@ function Header() {
                         <Link to={'/trang-ca-nhan'} className={cx('user-link')}>
                             <div className={cx('avatar')}>{username.charAt(0).toUpperCase()}</div>
                             <span className={cx('username')}>{username}</span>
-                            {dataUser.isVerified ? <FontAwesomeIcon id={cx('icon')} icon={faCheckCircle} /> : null}
+                            {dataUser?.isVerified ? <FontAwesomeIcon id={cx('icon')} icon={faCheckCircle} /> : null}
                         </Link>
                     </div>
                 ) : (
