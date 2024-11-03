@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faLayerGroup, faLocationArrow, faSackDollar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faFontAwesome } from '@fortawesome/free-regular-svg-icons';
-import { requestHeartHouse } from '../../Config';
+import { requestGetHouseHeart, requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,6 +15,8 @@ const cx = classNames.bind(styles);
 
 function CardBody({ house, isFavorite }) {
     const token = decodedJWT();
+
+    const [dataFavorite, setDataFavorite] = useState([]);
 
     const handleHeartHouse = async (postId) => {
         const data = { postId, userId: token?.userId };
@@ -72,6 +74,16 @@ function CardBody({ house, isFavorite }) {
         if (house?.property?.images.length) findLargestImage();
     }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await requestGetHouseHeart(token.userId);
+            const postId = res.map((item) => item.postId);
+            setDataFavorite(postId);
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>
             <ToastContainer />
@@ -95,7 +107,10 @@ function CardBody({ house, isFavorite }) {
                 <div className={cx('title-home')}>
                     <h4>{house.postTitle}</h4>
                     <button onClick={() => handleHeartHouse(house?.postId)}>
-                        <FontAwesomeIcon icon={faHeart} style={{ color: isFavorite ? 'red' : 'gray' }} />
+                        <FontAwesomeIcon
+                            icon={faHeart}
+                            style={{ color: dataFavorite?.includes(house?.postId) ? 'red' : 'gray' }}
+                        />
                     </button>
                 </div>
                 <div className={cx('info-home')}>
