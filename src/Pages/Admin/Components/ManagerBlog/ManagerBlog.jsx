@@ -73,7 +73,7 @@ function ManagerBlog() {
                                 <td>{house.paymentStatus == 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
                                 <td>
                                     <button
-                                        disabled={house.paymentStatus == 0 && house.charged === 1 ? true : false}
+                                        disabled={house.paymentStatus !== 1 && house.charged === 1} // Disable nếu nút có màu đỏ
                                         onClick={() => handleSuccessBlog(house.postId)}
                                         type="button"
                                         className={`btn ${

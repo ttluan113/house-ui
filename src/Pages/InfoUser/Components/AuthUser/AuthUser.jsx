@@ -37,13 +37,24 @@ function AuthUser() {
     }, []);
 
     const handleVerify = async () => {
-        const res = await requestVerifyAccount(dataUser?.email);
-        if (res.status === 200) {
-            toast.success('Vui lòng chờ chuyển đến trang xác thực tài khoản !!!');
-            setTimeout(() => {
-                navigate('/verifyaccount');
-            }, 3000);
-        }
+        toast.success('Vui lòng chờ chuyển đến trang xác thực tài khoản !!!');
+
+        // Gọi requestVerifyAccount nhưng không cần await
+        requestVerifyAccount(dataUser?.email)
+            .then((res) => {
+                if (res.status !== 200) {
+                    toast.error('Đã có lỗi xảy ra trong quá trình xác thực.');
+                }
+            })
+            .catch((err) => {
+                console.error('Error verifying account:', err);
+                toast.error('Đã có lỗi xảy ra trong quá trình xác thực.');
+            });
+
+        // Chuyển hướng ngay lập tức mà không cần chờ
+        setTimeout(() => {
+            navigate('/verifyaccount');
+        }, 500);
     };
 
     return (

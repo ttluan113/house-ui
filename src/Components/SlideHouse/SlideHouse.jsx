@@ -8,9 +8,9 @@ const cx = classNames.bind(styles);
 function SlideHouse({ dataHouseAll }) {
     return (
         <div className={cx('wrapper')}>
-            <div>
+            {/* <div>
                 <Slide1 dataHouseAll={dataHouseAll} />
-            </div>
+            </div> */}
             <div>
                 <Banner />
             </div>

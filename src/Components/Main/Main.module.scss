@@ -67,3 +67,10 @@
         transition: 0.3s;
     }
 }
+
+/* Thêm CSS cho thanh phân trang */
+.pagination {
+    display: flex;
+    justify-content: center; /* Căn giữa */
+    margin-top: 20px; /* Khoảng cách từ phần trên */
+}

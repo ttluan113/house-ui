@@ -27,7 +27,7 @@ function HouseHeart() {
     return (
         <div className={cx('wrapper')}>
             {dataHouse.map((house) => (
-                <CardBody house={house} isFavorite={favoritePostIds.includes(house.postId)} />
+                <CardBody house={house} />
             ))}
         </div>
     );

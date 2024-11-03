@@ -59,10 +59,10 @@ function Admin() {
                             Quản Lý Bài Đăng Bất Động Sản
                             <FontAwesomeIcon id={cx('icon')} />
                         </li>
-                        <li onClick={() => setCheckType(11)}>
+                        {/* <li onClick={() => setCheckType(11)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faSignal} />
                             Quản Lý Tiện Ích
-                        </li>
+                        </li> */}
                         <li onClick={() => setCheckType(5)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
                             Tạo Bất Động Sản

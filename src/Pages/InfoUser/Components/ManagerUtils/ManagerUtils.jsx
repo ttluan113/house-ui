@@ -23,7 +23,7 @@ function ManagerUtils() {
     const [huyen, setHuyen] = useState([]);
     const [idHuyen, setIdHuyen] = useState(0);
     const [xa, setXa] = useState([]);
-    const [setIdXa] = useState(0);
+    const [idXa, setIdXa] = useState(0);
 
     useEffect(() => {
         axios.get('https://esgoo.net/api-tinhthanh/1/0.htm').then((res) => setTinhThanh(res.data.data));
@@ -56,7 +56,7 @@ function ManagerUtils() {
                 toast.success('Thêm Tiện Ích Thành Công !!!');
             }
         } catch (error) {
-            toast.error('Lỗi Vui Lòng Thử Lại !!!');
+            toast.error('Lỗi k tìm thấy tiện ích Vui Lòng Thử Lại !!!');
         }
     };
 
@@ -127,6 +127,7 @@ function ManagerUtils() {
                     const selectedValue = e.target.value;
                     setIdXa(selectedValue); // Đặt ID
                     const selectedItem = xa.find((item) => item.id === selectedValue);
+                    console.log(selectedItem);
                     setPhuong(selectedItem ? selectedItem.name : '');
                 }}
             >

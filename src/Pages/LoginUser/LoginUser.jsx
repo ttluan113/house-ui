@@ -9,12 +9,12 @@ import Cookies from 'js-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { jwtDecode } from 'jwt-decode';
 const cx = classNames.bind(styles);
 
 function LoginUser() {
-    const [email, setEmail] = useState('hiephap03');
-    const [password, setPassword] = useState('018267');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
 
@@ -24,8 +24,11 @@ function LoginUser() {
             const res = await requestLogin(data);
             if (res.status === 200) {
                 toast.success('Đăng nhập thành công !!!');
+                const data = jwtDecode(res.data.accessToken);
                 Cookies.set('Token', res.data.accessToken);
                 Cookies.set('Username', email);
+                Cookies.set('userId', data.userId);
+                Cookies.set('email', data.sub);
                 navigate('/');
             }
         } catch (error) {

@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import { useEffect, useState, useRef } from 'react';
-import { requestGetSingleProperty, requestGetUtils } from '../../Config';
+import { requestGetSingleProperty, requestGetUniversities, requestGetHospitals } from '../../Config';
 import { useParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -11,6 +11,7 @@ import 'leaflet-defaulticon-compatibility';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import { Tabs, Tab } from '@mui/material';
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +21,7 @@ function DetailHouseBDS() {
     const [activeBtn, setActiveBtn] = useState(0);
     const mapRef = useRef(null);
     const [dataUtils, setDataUtils] = useState([]);
+    const [tabIndex, setTabIndex] = useState(0); // 0: Universities, 1: Hospitals
     const mapInstance = useRef(null); // Store the map instance
 
     useEffect(() => {
@@ -28,15 +30,31 @@ function DetailHouseBDS() {
                 const res = await requestGetSingleProperty(id);
                 console.log(res);
                 setDataHouse(res);
-
-                const utils = await requestGetUtils(res?.propertyId);
-                setDataUtils(utils);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
         fetchData();
     }, [id]);
+
+    useEffect(() => {
+        const fetchUtilities = async () => {
+            if (dataHouse?.propertyId) {
+                try {
+                    let utils;
+                    if (tabIndex === 0) {
+                        utils = await requestGetUniversities(dataHouse.propertyId);
+                    } else {
+                        utils = await requestGetHospitals(dataHouse.propertyId);
+                    }
+                    setDataUtils(utils);
+                } catch (error) {
+                    console.error('Error fetching utilities:', error);
+                }
+            }
+        };
+        fetchUtilities();
+    }, [tabIndex, dataHouse]);
 
     useEffect(() => {
         if (dataHouse?.lat && dataHouse?.lon && !mapInstance.current) {
@@ -95,6 +113,10 @@ function DetailHouseBDS() {
 
         if (dataHouse.images?.length) findLargestImage();
     }, [dataHouse.images]);
+
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -167,6 +189,12 @@ function DetailHouseBDS() {
                             ref={mapRef}
                             style={{ width: '100%', height: '600px' }}
                         ></div>
+
+                        <Tabs value={tabIndex} onChange={handleTabChange} centered>
+                            <Tab label="Trường học" />
+                            <Tab label="Bệnh viện" />
+                        </Tabs>
+
                         <div className={cx('list-utils')}>
                             {dataUtils?.map((data, index) => (
                                 <Box key={index} sx={{ '& > legend': { mt: 2 } }} className={cx('utility-item')}>

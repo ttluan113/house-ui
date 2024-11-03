@@ -83,10 +83,8 @@ function CreateBDS() {
             soTang: soTang,
             sophong: sophong,
             soToilet: soToilet,
-            userId: decodeJwt.userId,
-            statusId: 1,
-            ownerId: 1,
-            categoryId,
+            ownerId: decodeJwt.userId,
+            categoryId: 1,
             location: location,
             phuong: phuong,
             district: district,
@@ -164,6 +162,16 @@ function CreateBDS() {
                     />
                     <label htmlFor="floatingInput">Giá Bất Động Sản</label>
                 </div>
+                <div className="form-floating mb-3">
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="floatingInput"
+                        placeholder="name@example.com/"
+                        onChange={(e) => setArea(e.target.value)}
+                    />
+                    <label htmlFor="floatingInput">Diện Tích</label>
+                </div>
 
                 <select
                     className="form-select mb-3"
@@ -184,17 +192,6 @@ function CreateBDS() {
                         onChange={(e) => setLocation(e.target.value)}
                     />
                     <label htmlFor="floatingInput">Phố</label>
-                </div>
-
-                <div className="form-floating mb-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="name@example.com/"
-                        onChange={(e) => setArea(e.target.value)}
-                    />
-                    <label htmlFor="floatingInput">Diện Tích</label>
                 </div>
 
                 <select

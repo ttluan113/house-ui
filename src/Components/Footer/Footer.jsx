@@ -10,7 +10,7 @@ function Footer() {
         <div className={cx('wrapper')}>
             <div>
                 <ul>
-                    <span id={cx('logo')}>OneHouseing</span>
+                    <span id={cx('logo')}>MasterHome</span>
                     <li style={{ color: 'black' }}>
                         <FontAwesomeIcon icon={faLocationDot} />
                         Tầng 1, Tòa văn phòng T26, KĐT Times City, 458 Minh Khai, Phường Vĩnh Tuy, Quận Hai Bà Trưng,
@@ -20,10 +20,7 @@ function Footer() {
                         <FontAwesomeIcon icon={faEnvelope} />
                         Hotline: 1800 646 466
                     </li>
-                    <li style={{ color: 'black' }}>
-                        <FontAwesomeIcon icon={faLink} />
-                        https://onehousing.vn
-                    </li>
+
                     <li style={{ color: 'black' }}>
                         <FontAwesomeIcon icon={faPhone} />
                         SĐT doanh nghiệp: 02471056788

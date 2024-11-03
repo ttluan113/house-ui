@@ -11,7 +11,7 @@ function Banner() {
     return (
         <div className={cx('wrapper')}>
             <div>
-                <h2>Mua nhà toàn diện cùng OneHousing</h2>
+                <h2>Mua nhà toàn diện cùng MasterHome</h2>
             </div>
 
             <div>
