@@ -4,13 +4,12 @@ import styles from './DinhGiaHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import imgBgr from '../../assets/img/test.png';
 
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
 import { useEffect, useState } from 'react';
 
-import axios from 'axios';
 import HouseChungCu from './Components/HouseChungCu/HouseChungCu';
 import HouseNhaDat from './Components/HouseNhaDat/HouseNhaDat';
+
+import images from './Components/images';
 
 const cx = classNames.bind(styles);
 
@@ -22,45 +21,6 @@ function DinhGiaHouse() {
     const [checkData, setCheckData] = useState(false);
 
     const [checkTab, setCheckTab] = useState(0);
-
-    ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
-
-    const data = {
-        labels: [
-            'Tháng 1',
-            'Tháng 2',
-            'Tháng 3',
-            'Tháng 4',
-            'Tháng 5',
-            'Tháng 6',
-            'Tháng 7',
-            'Tháng 8',
-            'Tháng 9',
-            'Tháng 10',
-            'Tháng 11',
-            'Tháng 12',
-        ],
-        datasets: [
-            {
-                label: 'Dữ liệu theo tháng',
-                data: [30, 25, 35, 50, 55, 45, 60, 70, 65, 75, 85, 90],
-                backgroundColor: 'rgba(75,192,192,0.4)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4, // Để làm đường mịn hơn
-            },
-        ],
-    };
-
-    const options = {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-    };
 
     return (
         <div className={cx('wrapper')}>
@@ -108,15 +68,34 @@ function DinhGiaHouse() {
                         </div>
                     </div>
                 </div>
-                {checkData ? (
-                    <div className={cx('chart')}>
-                        <h4>Dữ Liệu Định Giá</h4>
-                        <Line data={data} options={options} />
-                    </div>
-                ) : (
-                    <></>
-                )}
             </main>
+            {checkData ? (
+                <div className={cx('chart')}>
+                    <h4>Dữ Liệu Định Giá</h4>
+                    <div>
+                        <h2>Định Giá Cho Căn Nhà Căn D2.08.02 - Tầng 08 - Tòa D2</h2>
+                        <span>Cập Nhật Lúc: {new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <div className={cx('chart-item')}>
+                        <div id={cx('item')}>
+                            <img src={images.logo} alt="" />
+                            <div>
+                                <span>Định giá tham khảo</span>
+                                <h2>9,239,485,420đ</h2>
+                            </div>
+                        </div>
+                        <div id={cx('item')}>
+                            <img src={images.logo2} alt="" />
+                            <div>
+                                <span>Giá Theo m2</span>
+                                <h2>85,630,077đ</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

@@ -44,7 +44,11 @@
 
 .chart {
     width: 90%;
-    margin: 0px auto;
+    margin: 20px auto;
+    margin-bottom: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+
     h4 {
         padding-top: 10px;
         font-size: 24px;
@@ -67,5 +71,23 @@
         background: #094bf4;
         color: #fff;
         transition: 0.3s all;
+    }
+}
+
+.chart-item {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 20px;
+}
+
+#item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #ccc;
+    img {
+        padding-left: 10px;
+        width: 60px;
+        height: 60px;
     }
 }
