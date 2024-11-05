@@ -3,12 +3,16 @@ import styles from './VerifyAccount.module.scss';
 import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import Header from '../../Components/Header/Header';
+import { useNavigate } from 'react-router-dom';
+import { requestVerify } from '../../Config/index';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
 function VerifyAccount() {
+    const navigate = useNavigate();
     const [code, setCode] = useState(Array(6).fill(''));
-
+    const email = Cookies.get('email');
     const handleChange = (index, value) => {
         const newCode = [...code];
         newCode[index] = value;
@@ -24,12 +28,13 @@ function VerifyAccount() {
 
     const handleSubmit = async () => {
         const otpString = code.join('');
+        console.log(otpString);
         try {
-            // const res = await requestVerify(otpString);
+            const res = await requestVerify(email, otpString);
             toast.success(res.message);
             setTimeout(() => {
-                // router.push('/login');
-            }, 2000);
+                navigate('/'); // Chuyển hướng về trang chủ
+            }, 1000);
         } catch (error) {
             toast.error(error.response.data.message);
         }

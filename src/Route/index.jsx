@@ -14,7 +14,7 @@ export const publicRoutes = [
     { path: '/account/login', element: <LoginUser /> },
     { path: '/account/register', element: <RegisterUser /> },
     { path: '/trang-ca-nhan', element: <InfoUser /> },
-    { path: '/bds/:id', element: <DetailHouse /> },
+    { path: '/post/:id', element: <DetailHouse /> },
     { path: '/house/:id', element: <DetailHouseBDS /> },
     { path: '/search', element: <SearchHouse /> },
     { path: '/dinh-gia', element: <DinhGiaHouse /> },

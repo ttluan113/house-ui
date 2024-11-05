@@ -95,9 +95,7 @@ export const requestGetOneHouse = async (id) => {
 };
 
 export const requestSearchHouse = async (data) => {
-    const res = await request.post('/posts/search', data, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await request.post('/posts/search', data);
     return res.data;
 };
 
@@ -133,8 +131,13 @@ export const requestGetAllUser = async () => {
     return res.data;
 };
 
-export const requestGetUtils = async (data) => {
-    const res = await request.get(`/utilities/near/${data}`, { headers: { Authorization: `Bearer ${token}` } });
+export const requestGetUniversities = async (data) => {
+    const res = await request.get(`/utilities/nearby-schools/${data}`);
+    return res.data;
+};
+
+export const requestGetHospitals = async (data) => {
+    const res = await request.get(`/utilities/nearby-hospitals/${data}`);
     return res.data;
 };
 
@@ -158,6 +161,9 @@ export const requestPaymentsMomo = async (postId) => {
 /// auth
 
 export const requestAuthMe = async (id) => {
+    if (!token) {
+        return;
+    }
     const res = await request.get(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
@@ -166,6 +172,13 @@ export const requestAuthMe = async (id) => {
 
 export const requestVerifyAccount = async (email) => {
     const res = await request.post(`/users/send-verification-email?email=${email}`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res;
+};
+
+export const requestVerify = async (email, code) => {
+    const res = await request.post(`/users/verify-user?email=${email}&code=${code}`, null, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res;

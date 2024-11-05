@@ -2,9 +2,10 @@ import classNames from 'classnames/bind';
 import styles from './HouseMe.module.scss';
 
 import { useEffect, useState } from 'react';
-import { requestGetAllBDS } from '../../../../Config';
+import { requestGetBDSByUserId } from '../../../../Config';
 import CreateBDS from '../../Modal/ModalCreateBlog';
 import { ToastContainer } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -19,9 +20,11 @@ function HouseMe() {
         setShowModalCreateBDS(true);
     };
 
+    const userId = Cookies.get('userId');
+
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetAllBDS();
+            const res = await requestGetBDSByUserId(userId);
             setDataBDS(res);
         };
         fetchData();
@@ -30,7 +33,7 @@ function HouseMe() {
     return (
         <div className={cx('wrapper')}>
             <ToastContainer />
-            <h4>Căn bán cho OneHousing</h4>
+            <h4>Căn bán cho MasterHome</h4>
             <div>
                 <table className="table table-bordered border-primary">
                     <thead>

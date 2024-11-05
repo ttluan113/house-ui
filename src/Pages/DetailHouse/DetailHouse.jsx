@@ -2,70 +2,118 @@ import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import { useEffect, useState, useRef } from 'react';
-import { requestGetOneHouse, requestGetUtils } from '../../Config';
+import { requestGetOneHouse, requestGetUniversities, requestGetHospitals } from '../../Config';
 import { useParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility';
-
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
-
+import { Box, Typography, Rating, Tabs, Tab } from '@mui/material';
+// import ChatModal from './ChatModal.jsx';
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
     const { id } = useParams();
     const [dataHouse, setDataHouse] = useState({});
     const [activeBtn, setActiveBtn] = useState(0);
-    const mapRef = useRef(null); // Tham chiếu đến thẻ chứa bản đồ
-    const [dataUtils, setDatautils] = useState([]);
+    const mapRef = useRef(null);
+    const [dataUtils, setDataUtils] = useState([]);
+    const [tabIndex, setTabIndex] = useState(0); // 0: Trường học, 1: Bệnh viện
 
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
+    };
+
+    // Fetch house data
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await requestGetOneHouse(id);
-            setDataHouse(res);
-            if (res.property.lon === null || res.property.lat === null) {
-                return;
+        const fetchHouseData = async () => {
+            try {
+                const data = await requestGetOneHouse(id);
+                console.log(data);
+                setDataHouse(data);
+            } catch (error) {
+                console.error('Error fetching house data:', error);
             }
-            const dataUtils = await requestGetUtils(res?.property?.propertyId);
-            setDatautils(dataUtils);
         };
-        fetchData();
+
+        if (id) {
+            fetchHouseData();
+        }
     }, [id]);
 
+    // Fetch utilities based on tab index
+    useEffect(() => {
+        const fetchUtilities = async () => {
+            if (!dataHouse?.property?.propertyId) {
+                console.warn('Property ID is missing, cannot fetch utilities.');
+                return;
+            }
+
+            try {
+                let data;
+
+                console.log('Fetching utilities for tabIndex:', tabIndex);
+                if (tabIndex === 0) {
+                    console.log('Requesting universities for propertyId:', dataHouse.property.propertyId);
+                    data = await requestGetUniversities(dataHouse.property.propertyId);
+                } else {
+                    console.log('Requesting hospitals for propertyId:', dataHouse.property.propertyId);
+                    data = await requestGetHospitals(dataHouse.property.propertyId);
+                }
+
+                console.log(data);
+                setDataUtils(data);
+            } catch (error) {
+                console.error('Error fetching utilities:', error);
+            }
+        };
+
+        fetchUtilities();
+    }, [tabIndex, dataHouse]); // Depend on dataHouse instead of id
+
+    // Initialize map
     useEffect(() => {
         if (dataHouse?.property?.lat && dataHouse?.property?.lon) {
             const map = L.map(mapRef.current, {
-                center: [dataHouse?.property?.lat, dataHouse?.property?.lon],
-                zoom: 17, // Default zoom level
-                minZoom: 15, // Minimum zoom level
-                maxZoom: 20, // Maximum zoom level
-                scrollWheelZoom: false, // Disable zoom by scrolling
+                center: [dataHouse.property.lat, dataHouse.property.lon],
+                zoom: 16,
+                minZoom: 15,
+                maxZoom: 20,
+                scrollWheelZoom: false,
             });
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             }).addTo(map);
 
-            L.marker([dataHouse?.property?.lat, dataHouse?.property?.lon])
+            // Marker for house
+            L.marker([dataHouse.property.lat, dataHouse.property.lon])
                 .addTo(map)
-                .bindPopup(dataHouse?.property?.location || 'Vị trí căn nhà')
+                .bindPopup(dataHouse.property.location || 'Vị trí căn nhà')
                 .openPopup();
+
+            // Add markers for utilities
+            dataUtils.forEach((utility) => {
+                const icon =
+                    tabIndex === 0
+                        ? L.icon({ iconUrl: '/markers/university_nbg.png', iconSize: [35, 50] })
+                        : L.icon({ iconUrl: '/markers/hospital_nbg.png', iconSize: [35, 50] });
+
+                L.marker([utility.lat, utility.lon], { icon }).addTo(map).bindPopup(utility.utilityName);
+            });
 
             // Cleanup when the component unmounts
             return () => map.remove();
         } else {
             console.warn('Latitude or Longitude is missing, map will not be initialized.');
         }
-    }, [dataHouse]);
+    }, [dataHouse, dataUtils, tabIndex]);
 
     useEffect(() => {
         document.title = `${dataHouse?.postTitle || 'Chi tiết nhà'}`;
         console.log(dataHouse);
     }, [dataHouse]);
 
-    // sap xep
+    // Handle largest image selection
     const [largestImage, setLargestImage] = useState(null);
     const getImageResolution = (src) => {
         return new Promise((resolve) => {
@@ -104,7 +152,7 @@ function DetailHouse() {
                     {dataHouse?.property?.images.length > 1 && (
                         <div className={cx('img-small')}>
                             {dataHouse?.property?.images
-                                .filter((img) => img !== largestImage) // Exclude largest image from thumbnails
+                                .filter((img) => img !== largestImage)
                                 .map((img, index) => (
                                     <img key={index} src={img} alt={`img-${index}`} />
                                 ))}
@@ -157,6 +205,11 @@ function DetailHouse() {
                             style={{ width: '100%', height: '600px' }}
                         ></div>
 
+                        <Tabs value={tabIndex} onChange={handleTabChange} centered>
+                            <Tab label="Trường học" />
+                            <Tab label="Bệnh viện" />
+                        </Tabs>
+
                         <div className={cx('list-utils')}>
                             {dataUtils?.map((data, index) => (
                                 <Box key={index} sx={{ '& > legend': { mt: 2 } }} className={cx('utility-item')}>
@@ -167,6 +220,17 @@ function DetailHouse() {
                         </div>
                     </div>
                 </div>
+                <Button onClick={() => setChatOpen(true)} variant="outlined" color="primary">
+                    Chat with Author
+                </Button>
+
+                {/* Chat Modal */}
+                {/* <ChatModal
+                    open={chatOpen}
+                    onClose={() => setChatOpen(false)}
+                    currentUserId={currentUserId}
+                    postAuthorId={postAuthorId}
+                /> */}
             </main>
         </div>
     );

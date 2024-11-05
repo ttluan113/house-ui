@@ -15,37 +15,29 @@ const cx = classNames.bind(styles);
 
 function CardBody({ house, isFavorite }) {
     const token = decodedJWT();
-
     const [dataFavorite, setDataFavorite] = useState([]);
 
     const handleHeartHouse = async (postId) => {
         const data = { postId, userId: token?.userId };
         const res = await requestHeartHouse(data);
+
         if (res.status === 201) {
             toast.success('Đã thêm vào yêu thích');
+            setDataFavorite((prev) => [...prev, postId]); // Add postId to favorites
         } else {
             toast.error('Đã có lỗi xảy ra');
         }
     };
 
     const calculateDaysRemaining = (createdAt) => {
-        // Convert createdAt to a date object and reset time to 00:00:00
         const createdDate = new Date(createdAt);
         createdDate.setHours(0, 0, 0, 0);
-
-        // Calculate the expiry date by adding 30 days
         const expiryDate = new Date(createdDate);
-        expiryDate.setDate(expiryDate.getDate() + 30); // Add 30 days
-        expiryDate.setHours(0, 0, 0, 0); // Reset time for consistency
-
-        // Get the current date and reset its time to 00:00:00
+        expiryDate.setDate(expiryDate.getDate() + 30);
+        expiryDate.setHours(0, 0, 0, 0);
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
-
-        // Calculate the time difference in milliseconds
         const timeDiff = expiryDate - currentDate;
-
-        // Convert milliseconds to days and ensure non-negative value
         const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
         return daysRemaining < 0 ? 0 : daysRemaining;
     };
@@ -59,35 +51,34 @@ function CardBody({ house, isFavorite }) {
         });
     };
 
-    // Find the image with the largest resolution
     useEffect(() => {
         const findLargestImage = async () => {
             const resolutions = await Promise.all(house.property.images.map((img) => getImageResolution(img)));
-
             const maxResImage = resolutions.reduce((max, current) =>
                 current.resolution > max.resolution ? current : max,
             );
-
             setLargestImage(maxResImage.src);
         };
 
         if (house?.property?.images.length) findLargestImage();
-    }, []);
+    }, [house]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestGetHouseHeart(token.userId);
-            const postId = res.map((item) => item.postId);
+            const res = await requestGetHouseHeart(token?.userId);
+            const postId = res.map((item) => item?.postId);
             setDataFavorite(postId);
         };
-
+        if (!token) {
+            return;
+        }
         fetchData();
-    }, []);
+    }, [token?.userId]);
 
     return (
         <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>
             <ToastContainer />
-            <Link to={`/bds/${house?.postId}`}>
+            <Link to={`/post/${house?.postId}`}>
                 <div className={cx('slide')}>
                     <div className={cx('img')}>
                         <img src={largestImage} alt="" />
@@ -109,7 +100,7 @@ function CardBody({ house, isFavorite }) {
                     <button onClick={() => handleHeartHouse(house?.postId)}>
                         <FontAwesomeIcon
                             icon={faHeart}
-                            style={{ color: dataFavorite?.includes(house?.postId) ? 'red' : 'gray' }}
+                            style={{ color: dataFavorite.includes(house?.postId) ? 'red' : 'gray' }}
                         />
                     </button>
                 </div>
@@ -118,22 +109,18 @@ function CardBody({ house, isFavorite }) {
                         <FontAwesomeIcon style={{ color: '#007aff' }} icon={faFontAwesome} />
                         {`${house.postType === 'for_sale' ? 'Đăng Bán' : 'Cho Thuê'}`}
                     </span>
-
                     <span>
-                        <FontAwesomeIcon style={{ color: '#007aff' }} icon={faSackDollar} />{' '}
+                        <FontAwesomeIcon style={{ color: '#007aff' }} icon={faSackDollar} />
                         {Number(house?.price).toLocaleString()} VNĐ
                     </span>
-
                     <span>
                         <FontAwesomeIcon style={{ color: '#007aff' }} icon={faLayerGroup} />
                         {`Diện Tích : ${house.property.area} m²`}
                     </span>
-
                     <span>
                         <FontAwesomeIcon style={{ color: '#007aff' }} icon={faLocationArrow} />
-                        {`${house.property.phuong} - ${house.property.location} - ${house.property.district}  - ${house.property.province}`}
+                        {`${house.property.phuong} - ${house.property.location} - ${house.property.district} - ${house.property.province}`}
                     </span>
-
                     <span>
                         <strong>{calculateDaysRemaining(house.createdAt)} ngày còn lại</strong>
                     </span>

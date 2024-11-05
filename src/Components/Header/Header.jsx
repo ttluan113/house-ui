@@ -5,13 +5,28 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { requestAuthMe } from '../../Config/index';
+import { useState, useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const token = Cookies.get('Token');
+    const idUser = Cookies.get('userId');
     const username = Cookies.get('Username'); // Retrieve the username
-    console.log(username);
+    const [dataUser, setDataUser] = useState({});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (idUser) {
+                const res = await requestAuthMe(idUser);
+                setDataUser(res);
+            }
+        };
+
+        fetchData();
+    }, []); // Chỉ chạy một lần khi component render lần đầu
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('logo')}>
@@ -36,7 +51,7 @@ function Header() {
                         <Link to={'/trang-ca-nhan'} className={cx('user-link')}>
                             <div className={cx('avatar')}>{username.charAt(0).toUpperCase()}</div>
                             <span className={cx('username')}>{username}</span>
-                            <FontAwesomeIcon id={cx('icon')} icon={faCheckCircle} />
+                            {dataUser?.isVerified ? <FontAwesomeIcon id={cx('icon')} icon={faCheckCircle} /> : null}
                         </Link>
                     </div>
                 ) : (
