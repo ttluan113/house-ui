@@ -42,15 +42,6 @@
     }
 }
 
-.form-select {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    select {
-        height: 70px;
-    }
-}
-
 .chart {
     width: 90%;
     margin: 0px auto;
@@ -58,5 +49,23 @@
         padding-top: 10px;
         font-size: 24px;
         color: var(--primary-color);
+    }
+}
+
+.form-btn {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    button {
+        border: none;
+        background: #eff3ff;
+        padding: 10px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    #active {
+        background: #094bf4;
+        color: #fff;
+        transition: 0.3s all;
     }
 }

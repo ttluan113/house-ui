@@ -6,7 +6,11 @@ import imgBgr from '../../assets/img/test.png';
 
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import axios from 'axios';
+import HouseChungCu from './Components/HouseChungCu/HouseChungCu';
+import HouseNhaDat from './Components/HouseNhaDat/HouseNhaDat';
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +18,10 @@ function DinhGiaHouse() {
     useEffect(() => {
         document.title = 'Thông tin định giá';
     }, []);
+
+    const [checkData, setCheckData] = useState(false);
+
+    const [checkTab, setCheckTab] = useState(0);
 
     ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
@@ -77,54 +85,37 @@ function DinhGiaHouse() {
                             <div className={cx('title')}>
                                 <h4>Định Giá Căn Hộ Chung Cư</h4>
                             </div>
-                            <div className={cx('form-select')}>
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
 
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-
-                                <button type="button" class="btn btn-primary">
-                                    Định Giá Ngay
+                            <div className={cx('form-btn')}>
+                                <button onClick={() => setCheckTab(0)} id={cx(checkTab === 0 ? 'active' : '')}>
+                                    Nhà Đất
+                                </button>
+                                <button onClick={() => setCheckTab(1)} id={cx(checkTab === 1 ? 'active' : '')}>
+                                    Chung Cư
                                 </button>
                             </div>
+
+                            {checkTab === 1 ? <HouseChungCu /> : <HouseNhaDat />}
+
+                            <button
+                                onClick={() => setCheckData(!checkData)}
+                                style={{ width: '100%' }}
+                                type="button"
+                                class="btn btn-primary"
+                            >
+                                Định Giá Ngay
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <div className={cx('chart')}>
-                    <h4>Dữ Liệu Định Giá</h4>
-                    <Line data={data} options={options} />
-                </div>
+                {checkData ? (
+                    <div className={cx('chart')}>
+                        <h4>Dữ Liệu Định Giá</h4>
+                        <Line data={data} options={options} />
+                    </div>
+                ) : (
+                    <></>
+                )}
             </main>
         </div>
     );

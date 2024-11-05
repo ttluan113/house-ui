@@ -1,0 +1,8 @@
+.form-select {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    select {
+        height: 70px;
+    }
+}
