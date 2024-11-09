@@ -70,7 +70,7 @@ function InfoUser() {
 
                                 <li onClick={() => setTypeMenu(5)}>
                                     <FontAwesomeIcon id={cx('icons')} icon={faHouse} />
-                                    Tạo Tiện Ích Cho Bài Đắng
+                                    Tạo Tiện Ích
                                 </li>
                             </ul>
                         ) : (

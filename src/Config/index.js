@@ -152,7 +152,7 @@ export const requestGetAllUtils = async () => {
 };
 
 export const requestPaymentsMomo = async (postId) => {
-    const res = await request.put(`/posts/${postId}/payments?amount=10000`, null, {
+    const res = await request.put(`/${postId}/payments?amount=10000`, null, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;

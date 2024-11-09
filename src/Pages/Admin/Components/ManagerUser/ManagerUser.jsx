@@ -13,6 +13,7 @@ function ManagerUser() {
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetAllUser();
+            console.log(res);
             setDataAllUser(res);
         };
         fetchData();
@@ -37,6 +38,7 @@ function ManagerUser() {
                         <th scope="col">Tên Người Dùng</th>
                         <th scope="col">Email Người Dùng</th>
                         <th scope="col">Số Điện Thoại</th>
+                        <th scope="col">Tình trạng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +47,10 @@ function ManagerUser() {
                             <th scope="row">{user.id}</th>
                             <th scope="row">{user.name}</th>
                             <th scope="row">{user.email}</th>
-                            <th scope="row">0{user.phone}</th>
+                            <th scope="row">{user.phone}</th>
+                            <th scope="row" style={{ color: user.isVerified === 1 ? 'green' : 'gray' }}>
+                                {user.isVerified === 1 ? 'Được xác thực' : 'Chưa được xác thực'}
+                            </th>
                         </tr>
                     ))}
                 </tbody>

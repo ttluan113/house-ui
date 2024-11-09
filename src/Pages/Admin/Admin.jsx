@@ -63,10 +63,10 @@ function Admin() {
                             <FontAwesomeIcon id={cx('icon')} icon={faSignal} />
                             Quản Lý Tiện Ích
                         </li> */}
-                        <li onClick={() => setCheckType(5)}>
+                        {/* <li onClick={() => setCheckType(5)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />
                             Tạo Bất Động Sản
-                        </li>
+                        </li> */}
 
                         <li onClick={() => setCheckType(6)}>
                             <FontAwesomeIcon id={cx('icon')} icon={faPlus} />

@@ -16,7 +16,6 @@ const cx = classNames.bind(styles);
 function CardBody({ house, isFavorite }) {
     const token = decodedJWT();
     const [dataFavorite, setDataFavorite] = useState([]);
-
     const handleHeartHouse = async (postId) => {
         const data = { postId, userId: token?.userId };
         const res = await requestHeartHouse(data);

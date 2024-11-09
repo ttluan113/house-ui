@@ -18,6 +18,8 @@ const RealEstateReport = () => {
     const [selectedTabIndex, setSelectedTabIndex] = useState(0); // State to track the selected tab
     const [monthlyAveragePriceData, setMonthlyAveragePriceData] = useState({}); // State for average price data
     const [monthlyRevenueData, setMonthlyRevenueData] = useState({}); // State to hold monthly revenue data
+
+    const [selectedPurpose, setSelectedPurpose] = useState('for_sale'); // New state for purpose
     const allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const provinces = ['All', 'Hà Nội', 'Hồ Chí Minh'];
 
@@ -32,15 +34,15 @@ const RealEstateReport = () => {
         setMonthlyPostData(data);
     };
 
-    const fetchMonthlyAveragePriceData = async (year, province) => {
+    const fetchMonthlyAveragePriceData = async (year, province, purpose) => {
         const data = {};
         for (let month = 1; month <= 12; month++) {
             const response = await fetch(
-                `http://localhost:8080/api/statistic/average-price?province=${province}&month=${month}&year=${year}`,
+                `http://localhost:8080/api/statistic/average-price?province=${province}&month=${month}&year=${year}&purpose=${purpose}`,
             );
             const result = await response.json();
-            const averagePriceInBillion = parseFloat(result.averagePrice.replace(' tỷ', '')); // Convert "6.00 tỷ" to 6.00
-            data[month] = averagePriceInBillion;
+            const averagePrice = parseFloat(result.averagePrice.replace(purpose === 'for_sale' ? ' tỷ' : ' triệu', ''));
+            data[month] = averagePrice;
         }
         setMonthlyAveragePriceData(data);
     };
@@ -125,18 +127,19 @@ const RealEstateReport = () => {
     // tab2
     useEffect(() => {
         if (selectedTabIndex === 2) {
-            // Only fetch average price data when on the Average Price tab
-            fetchMonthlyAveragePriceData(selectedYear, selectedProvince === 'All' ? '' : selectedProvince);
+            fetchMonthlyAveragePriceData(
+                selectedYear,
+                selectedProvince === 'All' ? '' : selectedProvince,
+                selectedPurpose,
+            );
         }
-    }, [selectedYear, selectedProvince, selectedTabIndex]);
+    }, [selectedYear, selectedProvince, selectedTabIndex, selectedPurpose]);
 
     const getMonthlyAveragePriceChartData = () => {
         const monthlyValues = Array(12).fill(0);
-
         for (let month = 1; month <= 12; month++) {
-            monthlyValues[month - 1] = monthlyAveragePriceData[month] || 0; // Use 0 if data is not available
+            monthlyValues[month - 1] = monthlyAveragePriceData[month] || 0;
         }
-
         return {
             labels: allMonths,
             datasets: [
@@ -145,7 +148,7 @@ const RealEstateReport = () => {
                     fill: false,
                     borderColor: 'rgb(153, 102, 255)',
                     tension: 0.1,
-                    label: 'Average Price (Billion VND)', // Label to indicate unit
+                    label: `Average Price (${selectedPurpose === 'for_sale' ? 'Billion' : 'Million'} VND)`,
                 },
             ],
         };
@@ -173,7 +176,7 @@ const RealEstateReport = () => {
     };
 
     // options
-    const optionsForAvaragePrice = {
+    const optionsForAveragePrice = {
         responsive: true,
         plugins: {
             legend: {
@@ -188,7 +191,7 @@ const RealEstateReport = () => {
             y: {
                 ticks: {
                     callback: function (value) {
-                        return value + ' tỷ'; // Append " tỷ" to the y-axis labels
+                        return value + (selectedPurpose === 'for_sale' ? ' tỷ' : ' triệu');
                     },
                 },
             },
@@ -285,18 +288,27 @@ const RealEstateReport = () => {
                 <TabPanel>
                     <h4>Average Price Report</h4>
                     {selectedTabIndex === 2 && (
-                        <div className={cx('province-selector')}>
-                            <label>Select Province: </label>
-                            <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
-                                {provinces.map((province) => (
-                                    <option key={province} value={province}>
-                                        {province}
-                                    </option>
-                                ))}
-                            </select>
+                        <div className={cx('controls')}>
+                            <div className={cx('province-selector')}>
+                                <label>Select Province: </label>
+                                <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
+                                    {provinces.map((province) => (
+                                        <option key={province} value={province}>
+                                            {province}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={cx('purpose-selector')}>
+                                <label>Select Purpose: </label>
+                                <select value={selectedPurpose} onChange={(e) => setSelectedPurpose(e.target.value)}>
+                                    <option value="for_sale">For Sale</option>
+                                    <option value="for_rent">For Rent</option>
+                                </select>
+                            </div>
                         </div>
                     )}
-                    <Line data={getMonthlyAveragePriceChartData()} options={optionsForAvaragePrice} />
+                    <Line data={getMonthlyAveragePriceChartData()} options={optionsForAveragePrice} />
                 </TabPanel>
                 <TabPanel>
                     <h4>Total Revenue Report</h4>

@@ -166,3 +166,35 @@
 .utility-item legend {
     margin: 0; /* Xóa khoảng cách thừa */
 }
+
+.open-chat-btn {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+}
+
+// ChatModal positioning at bottom
+.chat-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 400px;
+    background-color: white;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+}

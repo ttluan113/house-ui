@@ -6,12 +6,12 @@ import { requestGetBDSByUserId } from '../../../../Config';
 import CreateBDS from '../../Modal/ModalCreateBlog';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
-
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function HouseMe() {
     const [dataBDS, setDataBDS] = useState([]);
-
+    const navigate = useNavigate();
     const [showModalShowModalCreateBDS, setShowModalCreateBDS] = useState(false);
     const [dataCreateBDS, setDataCreateBDS] = useState({});
 
@@ -21,6 +21,10 @@ function HouseMe() {
     };
 
     const userId = Cookies.get('userId');
+
+    const handleViewDetails = (id) => {
+        window.open(`/house/${id}`, '_blank'); // Mở trang chi tiết trong tab mới
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,7 +63,18 @@ function HouseMe() {
                                         alt={`Hình ảnh của ${house.title}`}
                                     />
                                 </td>
-                                <td>{house.title}</td>
+                                <td>
+                                    <span
+                                        onClick={() => handleViewDetails(house.propertyId)}
+                                        onContextMenu={(e) => {
+                                            e.preventDefault();
+                                            window.open(`/house/${house.propertyId}`, '_blank');
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {house.title}
+                                    </span>
+                                </td>
                                 <td>
                                     <div
                                         style={{ height: '100px', overflowY: 'scroll' }}

@@ -9,6 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility';
 import { Box, Typography, Rating, Tabs, Tab } from '@mui/material';
 // import ChatModal from './ChatModal.jsx';
+import Cookies from 'js-cookie';
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
@@ -18,6 +19,12 @@ function DetailHouse() {
     const mapRef = useRef(null);
     const [dataUtils, setDataUtils] = useState([]);
     const [tabIndex, setTabIndex] = useState(0); // 0: Trường học, 1: Bệnh viện
+
+    // chat
+
+    const [chatOpen, setChatOpen] = useState(false); // State to open/close chat
+    const currentUserId = Cookies.get('userId'); // Set your current user ID here
+    const postAuthorId = dataHouse?.property?.ownerId; // Get the author's ID from the property data
 
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
@@ -39,6 +46,8 @@ function DetailHouse() {
             fetchHouseData();
         }
     }, [id]);
+
+    const toggleChat = () => setChatOpen(!chatOpen);
 
     // Fetch utilities based on tab index
     useEffect(() => {
@@ -220,9 +229,9 @@ function DetailHouse() {
                         </div>
                     </div>
                 </div>
-                <Button onClick={() => setChatOpen(true)} variant="outlined" color="primary">
-                    Chat with Author
-                </Button>
+                {/* <button className={cx('open-chat-btn')} onClick={toggleChat}>
+                    Chat với người đăng
+                </button> */}
 
                 {/* Chat Modal */}
                 {/* <ChatModal
@@ -231,6 +240,7 @@ function DetailHouse() {
                     currentUserId={currentUserId}
                     postAuthorId={postAuthorId}
                 /> */}
+                {/* Chat Modal */}
             </main>
         </div>
     );
