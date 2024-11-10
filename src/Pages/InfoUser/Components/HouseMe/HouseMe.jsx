@@ -7,6 +7,7 @@ import CreateBDS from '../../Modal/ModalCreateBlog';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import ModalEdit from '../../Modal/ModalEdit';
 const cx = classNames.bind(styles);
 
 function HouseMe() {
@@ -14,6 +15,9 @@ function HouseMe() {
     const navigate = useNavigate();
     const [showModalShowModalCreateBDS, setShowModalCreateBDS] = useState(false);
     const [dataCreateBDS, setDataCreateBDS] = useState({});
+
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [dataEditBlog, setDataEditBlog] = useState({});
 
     const onShowModalCreateBDS = (data) => {
         setDataCreateBDS(data);
@@ -26,13 +30,18 @@ function HouseMe() {
         window.open(`/house/${id}`, '_blank'); // Mở trang chi tiết trong tab mới
     };
 
+    const handleShowModal = (data) => {
+        setShowModalEdit(true);
+        setDataEditBlog(data);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             const res = await requestGetBDSByUserId(userId);
             setDataBDS(res);
         };
         fetchData();
-    }, []);
+    }, [showModalEdit, dataCreateBDS]);
 
     return (
         <div className={cx('wrapper')}>
@@ -97,12 +106,22 @@ function HouseMe() {
                                     >
                                         Tạo Bài Đăng
                                     </button>
+
+                                    <button
+                                        onClick={() => handleShowModal(house)}
+                                        type="button"
+                                        className="btn btn-warning mt-3"
+                                        style={{ width: '100%', padding: '10px' }} // Cải thiện kích thước và hiển thị
+                                    >
+                                        Chỉnh sửa
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            <ModalEdit show={showModalEdit} setShow={setShowModalEdit} data={dataEditBlog} />
             <CreateBDS show={showModalShowModalCreateBDS} setShow={setShowModalCreateBDS} data={dataCreateBDS} />
         </div>
     );

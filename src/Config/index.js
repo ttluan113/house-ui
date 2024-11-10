@@ -197,3 +197,10 @@ export const requestChangeStatusHouse = async (id) => {
     const res = await request.put(`/properties/${id}/status`, null, { headers: { Authorization: `Bearer ${token}` } });
     return res.data;
 };
+
+export const requestEditBlog = async (data) => {
+    const res = await request.patch(`/properties/${data.id}`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};
