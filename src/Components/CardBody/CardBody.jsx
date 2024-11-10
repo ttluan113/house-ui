@@ -3,9 +3,16 @@ import styles from './CardBody.module.scss';
 
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrown, faLayerGroup, faLocationArrow, faSackDollar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCrown,
+    faLayerGroup,
+    faLocationArrow,
+    faSackDollar,
+    faHeart,
+    faCircleCheck,
+} from '@fortawesome/free-solid-svg-icons';
 import { faFontAwesome } from '@fortawesome/free-regular-svg-icons';
-import { requestGetHouseHeart, requestHeartHouse } from '../../Config';
+import { requestAuthMe, requestGetHouseHeart, requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -72,7 +79,17 @@ function CardBody({ house, isFavorite }) {
             return;
         }
         fetchData();
-    }, [token?.userId]);
+    }, [token?.userId && isFavorite]);
+
+    const [dataUserUpload, setDataUserUpload] = useState({});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await requestAuthMe('1');
+            setDataUserUpload(res);
+        };
+        fetchData();
+    }, []);
 
     return (
         <div className={cx('wrapper')} id={cx(house.charged === 1 ? 'border-charged' : '')}>
@@ -95,7 +112,14 @@ function CardBody({ house, isFavorite }) {
                     <></>
                 )}
                 <div className={cx('title-home')}>
-                    <h4>{house.postTitle}</h4>
+                    <h4>
+                        {house.postTitle}{' '}
+                        {dataUserUpload?.isVerified === 1 ? (
+                            <FontAwesomeIcon id={cx('icon-check')} icon={faCircleCheck} />
+                        ) : (
+                            ''
+                        )}
+                    </h4>
                     <button onClick={() => handleHeartHouse(house?.postId)}>
                         <FontAwesomeIcon
                             icon={faHeart}

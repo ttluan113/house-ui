@@ -105,7 +105,7 @@
 
 .des {
     margin-top: 30px;
-    width: 60%;
+    width: 100%;
     p {
         line-height: 2;
     }
@@ -122,6 +122,11 @@
     #active-button {
         color: var(--primary-color);
     }
+}
+
+#icon-check {
+    color: var(--primary-color);
+    font-size: 20px;
 }
 
 .maps {
@@ -197,4 +202,16 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     transition: transform 0.3s ease;
+}
+
+.info-user-upload {
+    h4 {
+        text-align: start;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .info-house-1 {
+        width: 50%;
+    }
 }

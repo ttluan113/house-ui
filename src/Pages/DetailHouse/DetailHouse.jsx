@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import { useEffect, useState, useRef } from 'react';
-import { requestGetOneHouse, requestGetUniversities, requestGetHospitals } from '../../Config';
+import { requestGetOneHouse, requestGetUniversities, requestGetHospitals, requestAuthMe } from '../../Config';
 import { useParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -10,6 +10,9 @@ import 'leaflet-defaulticon-compatibility';
 import { Box, Typography, Rating, Tabs, Tab } from '@mui/material';
 // import ChatModal from './ChatModal.jsx';
 import Cookies from 'js-cookie';
+import ChatModal from './ChatModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
 
 function DetailHouse() {
@@ -20,9 +23,11 @@ function DetailHouse() {
     const [dataUtils, setDataUtils] = useState([]);
     const [tabIndex, setTabIndex] = useState(0); // 0: Trường học, 1: Bệnh viện
 
+    const [dataUserUpload, setDataUserUpload] = useState({});
+
     // chat
 
-    const [chatOpen, setChatOpen] = useState(false); // State to open/close chat
+    const [chatOpen, setChatOpen] = useState(true); // State to open/close chat
     const currentUserId = Cookies.get('userId'); // Set your current user ID here
     const postAuthorId = dataHouse?.property?.ownerId; // Get the author's ID from the property data
 
@@ -147,6 +152,14 @@ function DetailHouse() {
         if (dataHouse?.property?.images.length) findLargestImage();
     }, [dataHouse?.property?.images]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await requestAuthMe('1');
+            setDataUserUpload(res);
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <header>
@@ -154,7 +167,7 @@ function DetailHouse() {
             </header>
 
             <main className={cx('main')}>
-                {dataHouse?.charged === 1 && <h5>Tin được tài trợ bởi : MasterHouse</h5>}
+                {dataHouse?.charged === 1 && <h5>Tin được tài trợ bởi : MasterHouse </h5>}
                 <div className={cx('img-detail')}>
                     <div className={cx('img-big')}>{largestImage && <img src={largestImage} alt="big-img" />}</div>
 
@@ -177,7 +190,14 @@ function DetailHouse() {
                     </button>
                 </div>
                 <div className={cx('info-house')}>
-                    <h2 style={{ color: '#000' }}>{dataHouse.property?.title}</h2>
+                    <h2 style={{ color: '#000' }}>
+                        {dataHouse.property?.title}{' '}
+                        {dataUserUpload.isVerified === 1 ? (
+                            <FontAwesomeIcon id={cx('icon-check')} icon={faCircleCheck} />
+                        ) : (
+                            ''
+                        )}
+                    </h2>
                     <div className={cx('info-detail-house')}>
                         <div className={cx('column-detail')}>
                             <div className={cx('info-house-1')}>
@@ -201,8 +221,26 @@ function DetailHouse() {
                                 <p>{dataHouse.property?.soToilet || 0}</p>
                             </div>
                         </div>
-                        <div className={cx('des')}>
+                        <div className={cx('info-user-upload')}>
+                            <h4>Thông Tin Liên Hệ</h4>
+                            <div className={cx('info-house-1')}>
+                                <span>Email</span>
+                                <p>{dataUserUpload?.email}</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Số Điện Thoại</span>
+                                <p>0{dataUserUpload?.phone}</p>
+                            </div>
+                            <div className={cx('info-house-1')}>
+                                <span>Chủ Bài Đăng</span>
+                                <p>{dataUserUpload?.name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={cx('des')}>
+                        <div>
                             <h4>Mô Tả Căn Nhà</h4>
+
                             <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                         </div>
                     </div>

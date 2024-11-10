@@ -8,7 +8,7 @@ let stompClient = null;
 function ChatModal({ open, onClose, currentUserId, postAuthorId }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const messagesEndRef = useRef(null); // For auto-scrolling to the latest message
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
         if (open) {

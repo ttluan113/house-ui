@@ -29,7 +29,10 @@ function LoginUser() {
                 Cookies.set('Username', email);
                 Cookies.set('userId', data.userId);
                 Cookies.set('email', data.sub);
-                navigate('/');
+                setTimeout(() => {
+                    navigate('/');
+                    window.location.reload();
+                }, 2000);
             }
         } catch (error) {
             if (error.status === 400) {
