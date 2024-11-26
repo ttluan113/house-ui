@@ -12,7 +12,7 @@ import {
     faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { faFontAwesome } from '@fortawesome/free-regular-svg-icons';
-import { requestAuthMe, requestGetHouseHeart, requestHeartHouse } from '../../Config';
+import { requestGetUserById, requestGetHouseHeart, requestHeartHouse } from '../../Config';
 import decodedJWT from '../../utils/decodeJWT';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -85,7 +85,7 @@ function CardBody({ house, isFavorite }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await requestAuthMe('1');
+            const res = await requestGetUserById(house?.userId);
             setDataUserUpload(res);
         };
         fetchData();

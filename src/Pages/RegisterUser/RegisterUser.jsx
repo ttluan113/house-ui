@@ -19,6 +19,35 @@ function RegisterUser() {
     const [phone, setPhone] = useState('');
 
     const handleRegisterUser = async () => {
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Phone validation regex for numbers only
+        const phoneRegex = /^[0-9]+$/;
+
+        if (!emailRegex.test(email)) {
+            toast.error('Email không hợp lệ');
+            return;
+        }
+
+        if (!phoneRegex.test(phone)) {
+            toast.error('Số điện thoại chỉ được chứa chữ số');
+            return;
+        }
+        if (phone.length !== 10) {
+            toast.error('Số điện thoại không hợp lệ');
+            return;
+        }
+
+        if (username.length < 6) {
+            toast.error('Tên đăng nhập phải có ít nhất 6 ký tự');
+            return;
+        }
+
+        if (password.length < 6) {
+            toast.error('Mật khẩu phải có ít nhất 6 ký tự');
+            return;
+        }
+
         try {
             const data = { email, password, name, username, phone };
             const res = await requestRegister(data);
@@ -28,8 +57,10 @@ function RegisterUser() {
                 toast.success('Đăng ký thành công !!!');
             }
         } catch (error) {
-            if (error.status === 400) {
+            if (error.response && error.response.status === 400) {
                 toast.error('Người dùng đã tồn tại');
+            } else {
+                toast.error('Đăng ký thất bại, vui lòng thử lại');
             }
         }
     };
@@ -52,45 +83,46 @@ function RegisterUser() {
                         <input
                             type="text"
                             className="form-control"
-                            id="floatingInput"
-                            placeholder="name@example.com"
+                            id="floatingName"
+                            placeholder="Tên của bạn"
                             onChange={(e) => setName(e.target.value)}
                         />
-                        <label for="floatingInput">Tên Của Bạn</label>
+                        <label htmlFor="floatingName">Tên Của Bạn</label>
                     </div>
 
                     <div className="form-floating mb-3">
                         <input
                             type="text"
                             className="form-control"
-                            id="floatingInput"
-                            placeholder="name@example.com"
+                            id="floatingUsername"
+                            placeholder="Tên đăng nhập"
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                        <label for="floatingInput">Tên Đăng Nhập</label>
+                        <label htmlFor="floatingUsername">Tên Đăng Nhập</label>
                     </div>
 
                     <div className="form-floating mb-3">
                         <input
                             type="email"
                             className="form-control"
-                            id="floatingInput"
-                            placeholder="name@example.com"
+                            id="floatingEmail"
+                            placeholder="Email"
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <label for="floatingInput">Email</label>
+                        <label htmlFor="floatingEmail">Email</label>
                     </div>
 
                     <div className="form-floating mb-3">
                         <input
-                            type="email"
+                            type="text"
                             className="form-control"
-                            id="floatingInput"
-                            placeholder="name@example.com"
+                            id="floatingPhone"
+                            placeholder="Số điện thoại"
                             onChange={(e) => setPhone(e.target.value)}
                         />
-                        <label for="floatingInput">Số Điện Thoại</label>
+                        <label htmlFor="floatingPhone">Số Điện Thoại</label>
                     </div>
+
                     <div className="form-floating">
                         <input
                             type="password"
@@ -99,11 +131,11 @@ function RegisterUser() {
                             placeholder="Password"
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <label for="floatingPassword">Password</label>
+                        <label htmlFor="floatingPassword">Mật Khẩu</label>
                     </div>
                     <button onClick={handleRegisterUser}>Đăng Ký</button>
                     <span>
-                        Bạn dã có tài khoản <Link to={'/account/login'}>Đăng Nhập ?</Link>
+                        Bạn đã có tài khoản <Link to={'/account/login'}>Đăng Nhập?</Link>
                     </span>
                 </div>
             </main>

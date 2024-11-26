@@ -65,15 +65,18 @@ export const requestGetPostsByPropertyId = async (propertyId) => {
     const res = await request.get(`/posts/properties/${propertyId}`, { headers: { Authorization: `Bearer ${token}` } });
     return res.data;
 };
-export const requestGetPostByUserId = async (id) => {
-    const res = await request.get(`/posts/users/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+export const requestGetPostByUserId = async (id, status) => {
+    const query = status ? `?status=${status}` : '';
+    const res = await request.get(`/posts/users/${id}${query}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
 };
 
-export const requestUpdateStatus = async (id) => {
+export const requestUpdateStatus = async (id, status) => {
     const res = await request.put(
         `/posts/${id}/status`,
-        { status: 'approved' },
+        { status: `${status}` },
         { headers: { Authorization: `Bearer ${token}` } },
     );
     return res.data;
@@ -164,6 +167,13 @@ export const requestAuthMe = async (id) => {
     if (!token) {
         return;
     }
+    const res = await request.get(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+};
+
+export const requestGetUserById = async (id) => {
     const res = await request.get(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });

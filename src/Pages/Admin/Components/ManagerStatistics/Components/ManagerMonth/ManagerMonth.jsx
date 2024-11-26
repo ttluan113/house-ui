@@ -13,6 +13,7 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 const RealEstateReport = () => {
     const [monthlyPostData, setMonthlyPostData] = useState({}); // State to hold monthly post data
     const [monthlyPropertyData, setMonthlyPropertyData] = useState({}); // State to hold monthly property data
+    const [selectedPostType, setSelectedPostType] = useState('all');
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [selectedProvince, setSelectedProvince] = useState('all');
     const [selectedTabIndex, setSelectedTabIndex] = useState(0); // State to track the selected tab
@@ -24,10 +25,12 @@ const RealEstateReport = () => {
     const provinces = ['All', 'Hà Nội', 'Hồ Chí Minh'];
 
     // Function to fetch post counts for all months in the selected year
-    const fetchMonthlyPostData = async (year) => {
+    const fetchMonthlyPostData = async (year, type) => {
         const data = {};
         for (let month = 1; month <= 12; month++) {
-            const response = await fetch(`http://localhost:8080/api/posts/count?month=${month}&year=${year}`);
+            const response = await fetch(
+                `http://localhost:8080/api/posts/count?month=${month}&year=${year}&type=${type}`,
+            );
             const count = await response.json();
             data[month] = count; // Store the count for each month
         }
@@ -72,10 +75,10 @@ const RealEstateReport = () => {
 
     // Effect to fetch data when the selected year or province changes
     useEffect(() => {
-        fetchMonthlyPostData(selectedYear);
+        fetchMonthlyPostData(selectedYear, selectedPostType);
         fetchMonthlyPropertyData(selectedYear, selectedProvince === 'All' ? '' : selectedProvince);
-        fetchMonthlyRevenueData(selectedYear); // Fetch revenue data
-    }, [selectedYear, selectedProvince, selectedTabIndex]);
+        fetchMonthlyRevenueData(selectedYear); // Fetch revenue data,
+    }, [selectedYear, selectedProvince, selectedTabIndex, selectedPostType]);
 
     // tab 0
     let maxValue = 0;
@@ -191,7 +194,7 @@ const RealEstateReport = () => {
             y: {
                 ticks: {
                     callback: function (value) {
-                        return value + (selectedPurpose === 'for_sale' ? ' tỷ' : ' triệu');
+                        return selectedPurpose === 'for_sale' ? `${value}  tỷ` : `${value} triệu`;
                     },
                 },
             },
@@ -267,6 +270,14 @@ const RealEstateReport = () => {
 
                 <TabPanel>
                     <h4>Total Posts Report</h4>
+                    <div className={cx('post-type-selector')}>
+                        <label>Filter by Type: </label>
+                        <select value={selectedPostType} onChange={(e) => setSelectedPostType(e.target.value)}>
+                            <option value="all">All</option>
+                            <option value="paid">Paid</option>
+                            <option value="free">Free</option>
+                        </select>
+                    </div>
                     <Line data={getMonthlyPostChartData()} options={options} />
                 </TabPanel>
                 <TabPanel>

@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './HouseMe.module.scss';
 
 import { useEffect, useState } from 'react';
-import { requestGetBDSByUserId } from '../../../../Config';
+import { requestGetBDSByUserId, requestCountPostsByPropertyId } from '../../../../Config';
 import CreateBDS from '../../Modal/ModalCreateBlog';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
@@ -15,6 +15,7 @@ function HouseMe() {
     const navigate = useNavigate();
     const [showModalShowModalCreateBDS, setShowModalCreateBDS] = useState(false);
     const [dataCreateBDS, setDataCreateBDS] = useState({});
+    const [postCounts, setPostCounts] = useState({});
 
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [dataEditBlog, setDataEditBlog] = useState({});
@@ -39,10 +40,27 @@ function HouseMe() {
         const fetchData = async () => {
             const res = await requestGetBDSByUserId(userId);
             setDataBDS(res);
+            const counts = await Promise.all(
+                res.map(async (house) => {
+                    const count = await requestCountPostsByPropertyId(house.propertyId);
+
+                    return { propertyId: house.propertyId, count };
+                }),
+            );
+
+            // Update postCounts with results
+            const countsMap = counts.reduce((acc, { propertyId, count }) => {
+                acc[propertyId] = count;
+                return acc;
+            }, {});
+            setPostCounts(countsMap);
         };
         fetchData();
     }, [showModalEdit, dataCreateBDS]);
-
+    const handleViewPosts = (propertyId) => {
+        console.log(propertyId);
+        navigate(`/posts/properties/${propertyId}`); // Navigate to the posts for the selected property
+    };
     return (
         <div className={cx('wrapper')}>
             <ToastContainer />
@@ -59,6 +77,7 @@ function HouseMe() {
                             <th scope="col">Số Phòng</th>
                             <th scope="col">Số Tầng</th>
                             <th scope="col">Số Phòng Toilet</th>
+                            <th scope="col">Số bài đăng của tôi</th>
                             <th scope="col">Hành Động</th>
                         </tr>
                     </thead>
@@ -97,6 +116,14 @@ function HouseMe() {
                                 <td>{house.sophong ? house.sophong : 'Chưa Có'}</td>
                                 <td>{house.soTang ? house.soTang : 'Chưa Có'}</td>
                                 <td>{house.soToilet ? house.soToilet : 'Chưa Có'}</td>
+                                <td>
+                                    <span
+                                        onClick={() => handleViewPosts(house.propertyId)} // Navigate to the posts
+                                        style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                                    >
+                                        {postCounts[house.propertyId] || 0}
+                                    </span>
+                                </td>{' '}
                                 <td>
                                     <button
                                         onClick={() => onShowModalCreateBDS(house)}

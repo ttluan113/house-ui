@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './DetailHouse.module.scss';
 import Header from '../../Components/Header/Header';
 import { useEffect, useState, useRef } from 'react';
-import { requestGetOneHouse, requestGetUniversities, requestGetHospitals, requestAuthMe } from '../../Config';
+import { requestGetOneHouse, requestGetUniversities, requestGetHospitals, requestGetUserById } from '../../Config';
 import { useParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -25,6 +25,13 @@ function DetailHouse() {
 
     const [dataUserUpload, setDataUserUpload] = useState({});
 
+    const utilsRef = useRef(null);
+
+    const handleScrollToUtils = () => {
+        setActiveBtn(1);
+        utilsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     // chat
 
     const [chatOpen, setChatOpen] = useState(true); // State to open/close chat
@@ -40,7 +47,6 @@ function DetailHouse() {
         const fetchHouseData = async () => {
             try {
                 const data = await requestGetOneHouse(id);
-                console.log(data);
                 setDataHouse(data);
             } catch (error) {
                 console.error('Error fetching house data:', error);
@@ -51,6 +57,18 @@ function DetailHouse() {
             fetchHouseData();
         }
     }, [id]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (dataHouse && dataHouse.userId) {
+                console.log(dataHouse.userId);
+                const res = await requestGetUserById(dataHouse.userId);
+                setDataUserUpload(res);
+            }
+        };
+
+        fetchData();
+    }, [dataHouse]);
 
     const toggleChat = () => setChatOpen(!chatOpen);
 
@@ -65,7 +83,6 @@ function DetailHouse() {
             try {
                 let data;
 
-                console.log('Fetching utilities for tabIndex:', tabIndex);
                 if (tabIndex === 0) {
                     console.log('Requesting universities for propertyId:', dataHouse.property.propertyId);
                     data = await requestGetUniversities(dataHouse.property.propertyId);
@@ -74,7 +91,6 @@ function DetailHouse() {
                     data = await requestGetHospitals(dataHouse.property.propertyId);
                 }
 
-                console.log(data);
                 setDataUtils(data);
             } catch (error) {
                 console.error('Error fetching utilities:', error);
@@ -105,6 +121,7 @@ function DetailHouse() {
                 .bindPopup(dataHouse.property.location || 'Vị trí căn nhà')
                 .openPopup();
 
+            console.log(dataUtils);
             // Add markers for utilities
             dataUtils.forEach((utility) => {
                 const icon =
@@ -152,14 +169,6 @@ function DetailHouse() {
         if (dataHouse?.property?.images.length) findLargestImage();
     }, [dataHouse?.property?.images]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await requestAuthMe('1');
-            setDataUserUpload(res);
-        };
-        fetchData();
-    }, []);
-
     return (
         <div className={cx('wrapper')}>
             <header>
@@ -185,7 +194,7 @@ function DetailHouse() {
                     <button onClick={() => setActiveBtn(0)} id={cx(activeBtn === 0 && 'active-button')}>
                         Giá Bán
                     </button>
-                    <button onClick={() => setActiveBtn(1)} id={cx(activeBtn === 1 && 'active-button')}>
+                    <button onClick={handleScrollToUtils} id={cx(activeBtn === 1 && 'active-button')}>
                         Tiện ích
                     </button>
                 </div>
@@ -244,7 +253,7 @@ function DetailHouse() {
                             <div dangerouslySetInnerHTML={{ __html: dataHouse.property?.description }} />
                         </div>
                     </div>
-                    <div className={cx('utils')}>
+                    <div className={cx('utils')} ref={utilsRef}>
                         <div
                             id="map"
                             className={cx('maps')}

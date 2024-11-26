@@ -205,12 +205,14 @@
 }
 
 .info-user-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; // Sử dụng `gap` ngay trong `.info-user-upload`
+
     h4 {
         text-align: start;
     }
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
     .info-house-1 {
         width: 50%;
     }

@@ -9,29 +9,44 @@ function ModalEdit({ show, setShow, data }) {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [id, setId] = useState();
+    const [title, setTitle] = useState();
+    const [rooms, setRooms] = useState('');
+    const [floors, setFloors] = useState('');
+    const [toilets, setToilets] = useState('');
 
     const handleClose = () => {
         setShow(false);
     };
 
     useEffect(() => {
-        setPrice(data.price);
-        setDescription(data.description);
-        setId(data.propertyId);
+        if (data) {
+            console.log(data);
+            setPrice(data.price || '');
+            setDescription(data.description || '');
+            setTitle(data.title || '');
+            setId(data.propertyId);
+            setRooms(data.sophong || '');
+            setFloors(data.soTang || '');
+            setToilets(data.soToilet || '');
+        }
     }, [data]);
 
     const handleEdit = async () => {
         try {
-            const data = {
+            const updatedData = {
+                title,
                 price,
                 description,
                 id,
+                rooms,
+                floors,
+                toilets,
             };
-            await requestEditBlog(data);
-            toast.success('Chình Sửa Bài Đăng Thành Công !!!');
+            await requestEditBlog(updatedData);
+            toast.success('Chỉnh Sửa Bài Đăng Thành Công !!!');
             setShow(false);
         } catch (error) {
-            toast.success('Chình Sửa Bài Đăng Thất Bại !!!');
+            toast.error('Chỉnh Sửa Bài Đăng Thất Bại !!!');
         }
     };
 
@@ -39,21 +54,60 @@ function ModalEdit({ show, setShow, data }) {
         <div>
             <Modal show={show} size="lg">
                 <ToastContainer limit={1} />
-                <Modal.Header closeButton onClose={handleClose}>
+                <Modal.Header closeButton onClick={handleClose}>
                     <Modal.Title>Chỉnh Sửa Bài Đăng</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <>
-                        <div class="form-floating mb-3">
+                        <div className="form-floating mb-3">
                             <input
                                 type="number"
-                                class="form-control"
-                                id="floatingInput"
-                                placeholder="name@example.com"
+                                className="form-control"
+                                placeholder="Giá"
                                 onChange={(e) => setPrice(e.target.value)}
                                 value={price}
                             />
-                            <label for="floatingInput">Giá </label>
+                            <label>Giá</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Tiêu đề"
+                                onChange={(e) => setTitle(e.target.value)}
+                                value={title}
+                            />
+                            <label>Tiêu đề</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Số phòng"
+                                onChange={(e) => setRooms(e.target.value)}
+                                value={rooms}
+                            />
+                            <label>Số phòng</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Số tầng"
+                                onChange={(e) => setFloors(e.target.value)}
+                                value={floors}
+                            />
+                            <label>Số tầng</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="number"
+                                className="form-control"
+                                placeholder="Số toilet"
+                                onChange={(e) => setToilets(e.target.value)}
+                                value={toilets}
+                            />
+                            <label>Số toilet</label>
                         </div>
                         <Editor
                             onEditorChange={(value) => setDescription(value)}

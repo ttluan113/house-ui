@@ -84,7 +84,7 @@ function CreateBDS() {
             sophong: sophong,
             soToilet: soToilet,
             ownerId: decodeJwt.userId,
-            categoryId: 1,
+            categoryId: categoryId,
             location: location,
             phuong: phuong,
             district: district,
@@ -179,8 +179,8 @@ function CreateBDS() {
                     onChange={(e) => setCategoryId(e.target.value)}
                 >
                     <option defaultValue>Loại Bất Động Sản</option>
-                    <option value="1">Nhà Đất</option>
-                    <option value="2">Chung Cư</option>
+                    <option value="2">Nhà Đất</option>
+                    <option value="1">Chung Cư</option>
                 </select>
 
                 <div className="form-floating mb-3">

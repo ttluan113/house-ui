@@ -191,7 +191,7 @@ function UiBuyHouse({ dataHouseAll }) {
                             aria-label="Chọn kiểu nhà"
                             onChange={(e) => setCheckPostType(e.target.value)}
                         >
-                            <option selected>Kiểu Nhà</option>
+                            <option selected>Loại bài đăng</option>
                             <option value="for_rent">Cho Thuê</option>
                             <option value="for_sale">Đăng Bán</option>
                         </select>
