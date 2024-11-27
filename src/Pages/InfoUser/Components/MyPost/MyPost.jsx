@@ -4,6 +4,7 @@ import { requestGetPostByUserId } from '../../../../Config/index.js';
 import styles from './MyPost.module.scss'; // Optional styling
 import classNames from 'classnames/bind';
 import decodedJWT from '../../../../utils/decodeJWT.js';
+import CardBodyPayment from '../../../../Components/CardBodyPayment/CardBodyPayment.jsx';
 
 const cx = classNames.bind(styles);
 
@@ -60,9 +61,11 @@ function MyPost() {
                 </div>
             ) : posts?.length > 0 ? (
                 <div className={cx('result')}>
-                    {posts.map((post) => (
-                        <CardBody house={post} key={post.postId} />
-                    ))}
+                    {posts
+                        .filter((item) => item.paymentStatus !== 1 && item.charged === 1)
+                        .map((post) => (
+                            <CardBodyPayment house={post} key={post.postId} />
+                        ))}
                 </div>
             ) : (
                 <div className={cx('loading')}>
